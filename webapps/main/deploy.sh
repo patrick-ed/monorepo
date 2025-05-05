@@ -18,20 +18,20 @@ echo "Running deployment on Raspberry Pi..."
 ssh -p "$PORT" pi-deploy <<EOF
   set -e
 
-  echo "Navigating to project directory..."
+  echo "[server] Navigating to project directory..."
   cd "$REMOTE_DIR"
 
-  echo "Building Docker images..."
+  echo "[server] Building Docker images..."
   docker compose build
 
-  echo "Pulling down containers..."
+  echo "[server] Pulling down containers..."
   docker compose down || true
 
-  echo "Starting containers..."
+  echo "[server] Starting containers..."
   docker compose up -d --build
 
-  echo "Cleaning up unused images..."
+  echo "[server] Cleaning up unused images..."
   docker image prune -f
 
-  echo "Deployment complete"
+  echo "[server] Deployment complete!"
 EOF
