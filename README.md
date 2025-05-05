@@ -6,6 +6,6 @@ with that being said this is my fully dockerised monorepo complete with a CI/CD 
 
 ### purpose
 
-for now this monorepo holds the code for my websites under [patrickdd.com](patrickdd.com) and [patrickdumdum.com](patrickdumdum.com) and i plan to build other projects on this monorepo. 
+for now this monorepo holds the code for my websites under [patrickdd.com](http://patrickdumdum.com/) and [patrickdumdum.com](https://patrickdumdum.com/) and i plan to build other projects on this monorepo. 
 
 TODO: more docs
