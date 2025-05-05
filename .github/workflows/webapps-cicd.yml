@@ -34,21 +34,26 @@ jobs:
       - name: Determine changed webapps
         id: set-outputs
         run: |
-          # Array to store changed webapps
           changed=()
 
-          # Check fullstack changes
-          if [[ "${{ contains(steps.changed-files.outputs.all_changed_files, 'webapps/fullstackproject/') }}" == "true" ]]; then
+          # change detection
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/fullstackproject/)" ]]; then
             changed+=("fullstackproject")
           fi
 
-          # Check main changes
-          if [[ "${{ contains(steps.changed-files.outputs.all_changed_files, 'webapps/main/') }}" == "true" ]]; then
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/main/)" ]]; then
             changed+=("main")
           fi
 
-          # Convert to JSON array and set output
+          # debug output
+          echo "Files changed in fullstackproject:"
+          git diff --name-only HEAD^ HEAD -- webapps/fullstackproject/ || echo "None"
+          echo "Files changed in main:"
+          git diff --name-only HEAD^ HEAD -- webapps/main/ || echo "None"
+
+          # convert to JSON
           json_changed=$(jq -nc '$ARGS.positional' --args "${changed[@]}")
+          echo "DEBUG: json_changed = $json_changed"
           echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
 
       - name: checkout output
