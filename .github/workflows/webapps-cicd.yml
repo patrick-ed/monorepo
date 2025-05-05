@@ -58,6 +58,11 @@ jobs:
         service: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
     needs: detect-changes
     steps:
+      - name: Checkout changed_webapps
+        run: |
+          echo "Changed webapps: ${{ matrix.service }}"
+          echo "raw json: ${{ needs.detect-changes.outputs.changed_webapps }}"
+
       - uses: actions/checkout@v3
       - name: Build Service
         run: |
