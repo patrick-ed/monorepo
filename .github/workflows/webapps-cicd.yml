@@ -68,7 +68,8 @@ jobs:
             User ${{ secrets.PI_USER }}
             Port ${{ secrets.PI_SSH_PORT }}
             IdentityFile ~/.ssh/id_ed25519
-            StrictHostKeyChecking no" > ~/.ssh/config
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null" > ~/.ssh/config
 
       - name: Make deploy script executable
         run: chmod +x webapps/${{ matrix.webapp }}/deploy.sh

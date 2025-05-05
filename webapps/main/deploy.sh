@@ -19,14 +19,14 @@ docker save main-frontend:latest | gzip > main-frontend.tar.gz
 
 # Upload images and project files to Raspberry Pi
 echo "Uploading images and project files to Raspberry Pi..."
-scp -P "$PORT" main-frontend.tar.gz "$USER@$HOST:/home/$USER/temp/"
-scp -P "$PORT" -r "$LOCAL_DIR" "$USER@$HOST:/home/$USER/monorepo/webapps/"
+scp -P "$PORT" main-frontend.tar.gz "pi-deploy:/home/$USER/temp/"
+scp -P "$PORT" -r "$LOCAL_DIR" "pi-deploy:/home/$USER/monorepo/webapps/"
 
 rm main-frontend.tar.gz
 
 # Running deployment on Raspberry Pi
 echo "Running deployment on Raspberry Pi..."
-ssh -p "$PORT" "$USER@$HOST" <<EOF
+ssh -p "$PORT" pi-deploy <<EOF
   set -e
 
   echo "Loading Docker images..."
