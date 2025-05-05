@@ -10,6 +10,11 @@ services:
     build: ./backend
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://fsp-db-host:5432/fspdb
+      - SPRING_DATASOURCE_USERNAME=webapps
+      - SPRING_DATASOURCE_PASSWORD=securepass
+    depends_on:
+      - fsp-db-host
     networks:
       - shared
 
@@ -17,8 +22,10 @@ services:
     image: postgres:17
     environment:
       - POSTGRES_DB=fspdb
-      - POSTGRES_USER=webapps # Test credentials, not for production use
+      - POSTGRES_USER=webapps
       - POSTGRES_PASSWORD=securepass
+    ports:
+      - "5432:5432"
     networks:
       - shared
 
