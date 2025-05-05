@@ -1,5 +1,6 @@
 services:
   main-frontend:
+    build: ./frontend
     image: main-frontend:latest
     ports:
       - "81:80"
