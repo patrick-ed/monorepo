@@ -19,7 +19,7 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      changed_webapps: ${{ steps.set-outputs.outputs.changed_webapps }}
+      changed_webapps: ${{ steps.set-outputs.outputs.changed_webapps || '[]' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -55,6 +55,7 @@ jobs:
       matrix:
         webapp: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
     needs: detect-changes
+    if: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) != '[]' }}
     steps:
       - uses: actions/checkout@v3
       - name: Build webapp
