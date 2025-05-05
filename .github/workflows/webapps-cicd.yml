@@ -22,8 +22,6 @@ jobs:
       changed_webapps: ${{ steps.set-outputs.outputs.changed_webapps }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Store changed files in json array
         id: changed-files
