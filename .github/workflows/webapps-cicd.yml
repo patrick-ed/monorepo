@@ -1,0 +1,57 @@
+name: CI/CD for webapps
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "webapps/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "webapps/**"
+  workflow_dispatch:
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      fullstack_changed: ${{ steps.filter.outputs.fullstack }}
+      main_changed: ${{ steps.filter.outputs.main }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Detect Changed Paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            fullstack:
+              - 'webapps/fullstackproject/**'
+            main:
+              - 'webapps/main/**'
+
+  build-fullstack:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.fullstack_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Fullstack Webapp
+        run: |
+          cd webapps/fullstackproject
+          docker compose build
+
+  build-main:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.main_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build main Webapp
+        run: |
+          cd webapps/main
+          docker compose build
