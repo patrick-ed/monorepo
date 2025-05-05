@@ -23,15 +23,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Fetch changed files
-        id: changed-files
+      - name: Fetch changed webapps
+        id: changed-webapps
         uses: tj-actions/changed-files@v44
         with:
           files: |
             webapps/fullstackproject/**
             webapps/main/**
 
-      - name: Store changed files in json array
+      - name: Track changed webapps in json array
         id: set-outputs
         run: |
           changed=()
