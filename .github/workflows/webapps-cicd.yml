@@ -51,6 +51,10 @@ jobs:
           json_changed=$(jq -nc '$ARGS.positional' --args "${changed[@]}")
           echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
 
+      - name: checkout output
+        run: |
+          echo "final output value: ${{ steps.set-outputs.outputs.changed_webapps }}"
+
   build-changed-webapps:
     runs-on: ubuntu-latest
     strategy:
@@ -58,11 +62,6 @@ jobs:
         service: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
     needs: detect-changes
     steps:
-      - name: Checkout changed_webapps
-        run: |
-          echo "Changed webapps: ${{ matrix.service }}"
-          echo "raw json: ${{ needs.detect-changes.outputs.changed_webapps }}"
-
       - uses: actions/checkout@v3
       - name: Build Service
         run: |
