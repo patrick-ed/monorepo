@@ -11,8 +11,17 @@ REMOTE_DIR="/home/$USER/monorepo/webapps/$APP_NAME"
 
 # Build images
 echo "Building Docker images..."
-docker build -t fsp-frontend:latest "$LOCAL_DIR/frontend"
-docker build -t fsp-backend:latest "$LOCAL_DIR/backend"
+docker buildx build \
+  --platform linux/arm64 \
+  --output type=docker \
+  -t fsp-frontend:latest \
+  "$LOCAL_DIR/frontend"
+  
+docker buildx build \
+  --platform linux/arm64 \
+  --output type=docker \
+  -t fsp-backend:latest \
+  "$LOCAL_DIR/backend"
 
 # Save images to tarballs
 echo "Saving images to tarballs..."
