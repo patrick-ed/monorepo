@@ -1,0 +1,65 @@
+name: CI/CD for webapps
+
+on:
+  push:
+    branches:
+      - main
+      - cicd
+    paths:
+      - "webapps/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "webapps/**"
+  workflow_dispatch:
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_webapps: ${{ steps.set-outputs.outputs.changed_webapps || '[]' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fetch changed webapps
+        id: changed-webapps
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            webapps/fullstackproject/**
+            webapps/main/**
+
+      - name: Track changed webapps in json array
+        id: set-outputs
+        run: |
+          changed=()
+
+          # change detection
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/fullstackproject/)" ]]; then
+            changed+=("fullstackproject")
+          fi
+
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/main/)" ]]; then
+            changed+=("main")
+          fi
+
+          # convert to JSON
+          json_changed=$(jq -nc '$ARGS.positional' --args "${changed[@]}")
+          echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
+
+  build-changed-webapps:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        webapp: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
+      fail-fast: false
+    needs: detect-changes
+    if: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) != '[]' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build webapp
+        run: |
+          echo "Building ${{ matrix.webapp }}"
+          cd "webapps/${{ matrix.webapp }}"
+          docker compose build --no-cache
