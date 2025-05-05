@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - cicd
     paths:
       - "webapps/**"
   pull_request:
@@ -48,18 +47,32 @@ jobs:
           json_changed=$(jq -nc '$ARGS.positional' --args "${changed[@]}")
           echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
 
-  build-changed-webapps:
+  build-and-deploy:
+    needs: detect-changes
+    if: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         webapp: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
-      fail-fast: false
-    needs: detect-changes
-    if: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) != '[]' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Build webapp
+
+      - name: Set up SSH key
         run: |
-          echo "Building ${{ matrix.webapp }}"
-          cd "webapps/${{ matrix.webapp }}"
-          docker compose build --no-cache
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PI_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "Host pi-deploy
+            HostName ${{ secrets.PI_HOST }}
+            User ${{ secrets.PI_USER }}
+            Port ${{ secrets.PI_SSH_PORT }}
+            IdentityFile ~/.ssh/id_ed25519
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null" > ~/.ssh/config
+
+      - name: Make deploy script executable
+        run: chmod +x webapps/${{ matrix.webapp }}/deploy.sh
+
+      - name: Run deploy script (build, save, upload, load, start)
+        run: |
+          webapps/${{ matrix.webapp }}/deploy.sh ${{ secrets.PI_USER }} ${{ secrets.PI_SSH_PORT }} ${{ secrets.PI_HOST }}

@@ -1,6 +1,7 @@
 services:
   fsp-frontend:
     build: ./frontend
+    image: fsp-frontend:latest
     ports:
       - "4200:80"
     networks:
@@ -8,6 +9,7 @@ services:
 
   fsp-backend:
     build: ./backend
+    image: fsp-backend:latest
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://fsp-db-host:5432/fspdb
@@ -25,7 +27,7 @@ services:
       - POSTGRES_USER=webapps
       - POSTGRES_PASSWORD=securepass
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - shared
 
