@@ -1,0 +1,13 @@
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./shared/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    networks:
+      - shared
+
+networks:
+  shared:
+    name: shared
