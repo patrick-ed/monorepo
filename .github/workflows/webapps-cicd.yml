@@ -54,6 +54,7 @@ jobs:
     strategy:
       matrix:
         webapp: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
+      fail-fast: false
     needs: detect-changes
     if: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) != '[]' }}
     steps:
