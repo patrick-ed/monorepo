@@ -37,4 +37,3 @@ docker container ls
 
 ## next steps:
 - push docker files for cicd
-
