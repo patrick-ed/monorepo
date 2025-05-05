@@ -2,7 +2,7 @@ services:
   main-frontend:
     build: ./frontend
     ports:
-      - "80:80"
+      - "81:80"
     networks:
       - shared
 
