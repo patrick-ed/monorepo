@@ -13,6 +13,8 @@ REMOTE_DIR="/home/$USER/monorepo/webapps/$APP_NAME"
 echo "Building Docker images..."
 docker buildx build \
   --platform linux/arm64 \
+  --cache-from=type=local,src=.buildx-cache \
+  --cache-to=type=local,dest=.buildx-cache \
   --output type=docker \
   -t main-frontend:latest \
   "$LOCAL_DIR/frontend"
