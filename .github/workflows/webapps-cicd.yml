@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - main
+      - cicd
     paths:
       - "webapps/**"
   workflow_dispatch:
