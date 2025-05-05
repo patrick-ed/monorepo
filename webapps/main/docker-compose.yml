@@ -1,0 +1,11 @@
+services:
+  main-frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true

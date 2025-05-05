@@ -12,3 +12,16 @@ from /webapps
 ``` cd fullstackproject/ && docker compose down -v && docker compose up -d && cd .. && docker compose down && docker compose up -d && docker container ls ```
 
 things to note
+
+steps to deploy:
+- test ofc
+- build binaries for frontend and backend
+- send binaries to the pi
+- the pi also needs all nginx.conf files 
+- rebuild docker compose files and spin containers up
+- finished
+- ALSO have the option to clone whole repo onto pi and build there. will offer better dev expereince as dont have to worry about missing files.
+
+
+next steps:
+- push docker files for cicd
