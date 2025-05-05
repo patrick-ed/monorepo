@@ -22,32 +22,35 @@ jobs:
       changed_webapps: ${{ steps.set-outputs.outputs.changed_webapps }}
     steps:
       - uses: actions/checkout@v3
-
-      - name: Detect Changed Paths
-        id: filter
-        uses: dorny/paths-filter@v3
         with:
-          filters: |
-            fullstack:
-              - 'webapps/fullstackproject/**'
-            main:
-              - 'webapps/main/**'
+          fetch-depth: 0
 
-      - name: Set Outputs
+      - name: Store changed files in json array
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            webapps/fullstackproject/**
+            webapps/main/**
+
+      - name: Determine changed webapps
         id: set-outputs
         run: |
-          # Initialize an array to store changed webapps
+          # Array to store changed webapps
           changed=()
 
-          # Check which paths were changed
-          if [[ "${{ steps.filter.outputs.fullstack }}" == "true" ]]; then
+          # Check fullstack changes
+          if [[ "${{ contains(steps.changed-files.outputs.all_changed_files, 'webapps/fullstackproject/') }}" == "true" ]]; then
             changed+=("fullstackproject")
           fi
-          if [[ "${{ steps.filter.outputs.main }}" == "true" ]]; then
+
+          # Check main changes
+          if [[ "${{ contains(steps.changed-files.outputs.all_changed_files, 'webapps/main/') }}" == "true" ]]; then
             changed+=("main")
           fi
-          
-          json_changed=$(jq -nc --argjson arr "$(printf '%s\n' "${changed[@]}" | jq -R . | jq -s .)" '$arr')
+
+          # Convert to JSON array and set output
+          json_changed=$(jq -nc '$ARGS.positional' --args "${changed[@]}")
           echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
 
   build-changed-webapps:
@@ -60,5 +63,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build Service
         run: |
-          cd webapps/${{ matrix.service }}
+          echo "Building ${{ matrix.service }}"
+          cd "webapps/${{ matrix.service }}"
           docker compose build
