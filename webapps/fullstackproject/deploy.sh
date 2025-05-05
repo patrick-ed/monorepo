@@ -34,7 +34,7 @@ ssh -p "$PORT" "pi-deploy" <<EOF
   echo "Loading Docker images..."
   gunzip -c /home/$USER/temp/fsp-frontend.tar.gz | docker load
   gunzip -c /home/$USER/temp/fsp-backend.tar.gz | docker load
-  rm /home/$USER/temp/fsp-frontend.tar.gz /home/$USER/fsp-backend.tar.gz
+  rm /home/$USER/temp/fsp-frontend.tar.gz /home/$USER/temp/fsp-backend.tar.gz
 
   echo "Navigating to project directory..."
   cd "$REMOTE_DIR"
