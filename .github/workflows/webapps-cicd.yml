@@ -19,8 +19,7 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      fullstack_changed: ${{ steps.filter.outputs.fullstack }}
-      main_changed: ${{ steps.filter.outputs.main }}
+      changed_webapps: ${{ steps.set-outputs.outputs.changed_webapps }}
     steps:
       - uses: actions/checkout@v3
 
@@ -34,26 +33,32 @@ jobs:
             main:
               - 'webapps/main/**'
 
-  build-fullstack:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.fullstack_changed == 'true'
+      - name: Set Outputs
+        id: set-outputs
+        run: |
+          # Initialize an array to store changed webapps
+          changed=()
+
+          # Check which paths were changed
+          if [[ "${{ steps.filter.outputs.fullstack }}" == "true" ]]; then
+            changed+=("fullstackproject")
+          fi
+          if [[ "${{ steps.filter.outputs.main }}" == "true" ]]; then
+            changed+=("main")
+          fi
+
+          # Convert array to JSON and set output
+          echo "changed_webapps=$(jq -nc '$changed')" >> $GITHUB_OUTPUT
+
+  build-changed-webapps:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
+    needs: detect-changes
     steps:
       - uses: actions/checkout@v3
-
-      - name: Build Fullstack Webapp
+      - name: Build Service
         run: |
-          cd webapps/fullstackproject
-          docker compose build
-
-  build-main:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.main_changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build main Webapp
-        run: |
-          cd webapps/main
+          cd webapps/${{ matrix.service }}
           docker compose build
