@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Store changed files in json array
+      - name: Fetch changed files
         id: changed-files
         uses: tj-actions/changed-files@v44
         with:
@@ -31,7 +31,7 @@ jobs:
             webapps/fullstackproject/**
             webapps/main/**
 
-      - name: Determine changed webapps
+      - name: Store changed files in json array
         id: set-outputs
         run: |
           changed=()
@@ -45,31 +45,20 @@ jobs:
             changed+=("main")
           fi
 
-          # debug output
-          echo "Files changed in fullstackproject:"
-          git diff --name-only HEAD^ HEAD -- webapps/fullstackproject/ || echo "None"
-          echo "Files changed in main:"
-          git diff --name-only HEAD^ HEAD -- webapps/main/ || echo "None"
-
           # convert to JSON
           json_changed=$(jq -nc '$ARGS.positional' --args "${changed[@]}")
-          echo "DEBUG: json_changed = $json_changed"
           echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
-
-      - name: checkout output
-        run: |
-          echo "final output value: ${{ steps.set-outputs.outputs.changed_webapps }}"
 
   build-changed-webapps:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
+        webapp: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
     needs: detect-changes
     steps:
       - uses: actions/checkout@v3
-      - name: Build Service
+      - name: Build webapp
         run: |
-          echo "Building ${{ matrix.service }}"
-          cd "webapps/${{ matrix.service }}"
+          echo "Building ${{ matrix.webapp }}"
+          cd "webapps/${{ matrix.webapp }}"
           docker compose build
