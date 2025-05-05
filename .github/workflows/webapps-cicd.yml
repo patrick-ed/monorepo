@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - cicd
     paths:
       - "webapps/**"
   pull_request:
@@ -57,7 +56,7 @@ jobs:
         webapp: ${{ fromJson(needs.detect-changes.outputs.changed_webapps) }}
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
