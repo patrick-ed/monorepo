@@ -1,7 +1,9 @@
 FROM nginx:alpine
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build
+RUN ls -la /app
+RUN npm ci
+RUN ls -la /app
 COPY dist/fullstackproject/browser /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
