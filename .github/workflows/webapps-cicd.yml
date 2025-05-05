@@ -46,9 +46,9 @@ jobs:
           if [[ "${{ steps.filter.outputs.main }}" == "true" ]]; then
             changed+=("main")
           fi
-
-          # Convert array to JSON and set output
-          echo "changed_webapps=$(jq -nc '$changed')" >> $GITHUB_OUTPUT
+          
+          json_changed=$(jq -nc --argjson arr "$(printf '%s\n' "${changed[@]}" | jq -R . | jq -s .)" '$arr')
+          echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
 
   build-changed-webapps:
     runs-on: ubuntu-latest
