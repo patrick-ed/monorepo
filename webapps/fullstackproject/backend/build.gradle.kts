@@ -21,6 +21,10 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation ("org.springframework.boot:spring-boot-starter-security")
+	implementation("com.google.api-client:google-api-client:2.4.0")
+	implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+	implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")

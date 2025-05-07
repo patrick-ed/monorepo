@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@types/google.accounts": "^0.0.15"
+  }
+}

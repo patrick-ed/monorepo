@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: fullstackproject
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fspdb}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+app:
+  url:
+    frontend: ${FRONTEND_URL:http://localhost:4200}
+    backend: ${BACKEND_URL:http://localhost:8080}
