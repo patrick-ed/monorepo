@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AuthComponent {
 
+  authenticated = false
+
+  ngOnInit() {
+    localStorage.getItem('token') ? this.authenticated = true : this.authenticated = false
+  }  
 }
