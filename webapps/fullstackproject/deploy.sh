@@ -12,9 +12,15 @@ REMOTE_DIR="/home/$USER/monorepo/webapps/$APP_NAME"
 # Remove old files on server
 ssh -p "$PORT" "pi-deploy" <<EOF
   set -e
-  echo "[server] Removing old deployment directory..."
+  echo "[server] Backing up .env..."
+  cp "$REMOTE_DIR/.env" /tmp/.env_backup || true
+
+  echo "[server] Cleaning up old files"
   rm -rf "$REMOTE_DIR" || true
   mkdir -p "$REMOTE_DIR"
+
+  echo "[server] Restoring .env..."
+  mv /tmp/.env_backup "$REMOTE_DIR/.env" 2>/dev/null || true
 EOF
 
 # Upload project files to Raspberry Pi
