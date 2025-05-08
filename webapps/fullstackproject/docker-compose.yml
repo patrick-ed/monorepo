@@ -15,6 +15,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://fsp-db-host:5432/fspdb
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - APP_URL_FRONTEND=http://fsp.patrickdd.com
+      - APP_URL_BACKEND=http://fsp.patrickdd.com/api
+
     depends_on:
       - fsp-db-host
     networks:
