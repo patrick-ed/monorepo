@@ -9,6 +9,14 @@ APP_NAME="fullstackproject"
 LOCAL_DIR="webapps/$APP_NAME"
 REMOTE_DIR="/home/$USER/monorepo/webapps/$APP_NAME"
 
+# Remove old files on server
+ssh -p "$PORT" "pi-deploy" <<EOF
+  set -e
+  echo "[server] Removing old deployment directory..."
+  rm -rf "$REMOTE_DIR" || true
+  mkdir -p "$REMOTE_DIR"
+EOF
+
 # Upload project files to Raspberry Pi
 echo "Uploading project files to Raspberry Pi..."
 scp -P "$PORT" -r "$LOCAL_DIR" "pi-deploy:/home/$USER/monorepo/webapps/"
