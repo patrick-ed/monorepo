@@ -10,4 +10,4 @@ services:
 
 networks:
   shared:
-    name: shared
+    external: true
