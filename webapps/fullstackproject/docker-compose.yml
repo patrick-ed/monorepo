@@ -1,12 +1,4 @@
 services:
-
-  nginx:
-    build: ./nginx/frontend
-    depends_on:
-      - fsp-frontend
-    ports:
-      - "80:80"
-
   fsp-frontend:
     build: ./frontend
     image: fsp-frontend:latest
