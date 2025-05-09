@@ -12,7 +12,7 @@ BACKEND_DIR="$REMOTE_DIR/backend"
 FRONTEND_DIR="$REMOTE_DIR/frontend"
 
 # Remove old files on server
-ssh -p "$PORT" "pi-deploy" <<EOF
+ssh -o ServerAliveInterval=60 -p "$PORT" "pi-deploy" <<EOF
   set -e
   echo "[server] Backing up .env..."
   cp "$REMOTE_DIR/.env" /tmp/.env_backup_root || true
@@ -35,7 +35,7 @@ scp -P "$PORT" -r "$LOCAL_DIR" "pi-deploy:/home/$USER/monorepo/webapps/"
 
 # Running deployment on Raspberry Pi
 echo "Running deployment on Raspberry Pi..."
-ssh -p "$PORT" "pi-deploy" <<EOF
+ssh -o ServerAliveInterval=60 -p "$PORT" "pi-deploy" <<EOF
   set -e
 
   echo "[server] Navigating to project directory..."
