@@ -31,8 +31,6 @@ class AuthController(
         .setAudience(Collections.singletonList(clientId))
         .build()
 
-
-
     @PostMapping
     fun loginWithGoogle(
         @RequestParam("credential") token: String,
