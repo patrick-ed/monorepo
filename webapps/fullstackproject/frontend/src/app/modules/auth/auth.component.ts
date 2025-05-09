@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from '../../../environments/environment'
 
 @Component({
   selector: 'app-auth',
@@ -9,8 +10,9 @@ import { Component } from '@angular/core';
 export class AuthComponent {
 
   authenticated = false
+  loginUri = environment.apiUrl + '/login'
 
   ngOnInit() {
     localStorage.getItem('token') ? this.authenticated = true : this.authenticated = false
-  }  
+  }
 }
