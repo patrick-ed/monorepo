@@ -10,6 +10,8 @@ services:
   fsp-backend:
     build: ./backend
     image: fsp-backend:latest
+    ports:
+    - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://fsp-db-host:5432/fspdb
