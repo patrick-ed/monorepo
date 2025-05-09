@@ -3,6 +3,9 @@ spring:
     name: fullstackproject
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  jpa:
+    hibernate:
+      ddl-auto: update
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fspdb}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
