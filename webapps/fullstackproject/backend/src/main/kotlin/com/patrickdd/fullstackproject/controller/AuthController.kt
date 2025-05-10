@@ -43,6 +43,8 @@ class AuthController(
             val firstname = payload["given_name"] as String
             val lastname = payload["family_name"] as String
 
+            var addedToDb = false;
+
             if(!userRepository.existsById(email)){
                 val user = User(
                     email = email,
@@ -50,8 +52,9 @@ class AuthController(
                     lastname = lastname
                 )
                 userRepository.save<User>(user)
+                addedToDb = true
             }
-
+            println("ADDED TO DB $addedToDb")
             val appToken = jwtService.createToken(email)
             val redirectUrl = "$FRONTEND_URL/login?token=$appToken"
             RedirectView(redirectUrl)
