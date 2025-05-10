@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://fsp.patrickdd.com/api',
+    apiUrl: 'https://fsp.patrickdd.com/api',
 };
