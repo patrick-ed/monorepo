@@ -2,6 +2,7 @@ services:
   fsp-frontend:
     build: ./frontend
     image: fsp-frontend:latest
+    container_name: fsp-frontend
     ports:
       - "4200:80"
     networks:
@@ -10,16 +11,12 @@ services:
   fsp-backend:
     build: ./backend
     image: fsp-backend:latest
-    ports:
-    - "8080:8080"
+    container_name: fsp-backend
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://fsp-db-host:5432/fspdb
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - APP_URL_FRONTEND=http://fsp.patrickdd.com
-      - APP_URL_BACKEND=http://fsp.patrickdd.com/api
-
     depends_on:
       - fsp-db-host
     networks:
@@ -27,6 +24,7 @@ services:
 
   fsp-db-host:
     image: postgres:17
+    container_name: fsp-db
     environment:
       - POSTGRES_DB=fspdb
       - POSTGRES_USER=${DB_USER}
