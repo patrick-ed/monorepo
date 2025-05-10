@@ -1,6 +1,7 @@
 services:
   nginx:
     image: nginx:alpine
+    container_name: nginx-proxy
     volumes:
       - ./shared/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
