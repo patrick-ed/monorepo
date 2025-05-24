@@ -2,11 +2,12 @@ services:
   main-frontend:
     build: ./frontend
     image: main-frontend:latest
-    ports:
-      - "81:80"
+    container_name: main-frontend
+    restart: unless-stopped
     networks:
-      - shared
+      - shared_network_ref
 
 networks:
-  shared:
+  shared_network_ref:
     external: true
+    name: shared_network
