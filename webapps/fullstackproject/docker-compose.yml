@@ -3,40 +3,52 @@ services:
     build: ./frontend
     image: fsp-frontend:latest
     container_name: fsp-frontend
-    ports:
-      - "4200:80"
+    restart: unless-stopped
     networks:
-      - shared
+      - shared_network_ref
+    depends_on:
+      - fsp-backend 
 
   fsp-backend:
     build: ./backend
     image: fsp-backend:latest
     container_name: fsp-backend
+    restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://fsp-db-host:5432/fspdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://fsp-db:5432/fspdb
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - APP_URL_FRONTEND=http://fsp.patrickdd.com
       - APP_URL_BACKEND=http://fsp.patrickdd.com/api
-      
     depends_on:
-      - fsp-db-host
+      fsp-db:
+        condition: service_healthy
     networks:
-      - shared
+      - shared_network_ref
 
-  fsp-db-host:
+  fsp-db:
     image: postgres:17
     container_name: fsp-db
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=fspdb
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "5433:5432"
+    volumes:
+      - fsp_db_data:/var/lib/postgresql/data
     networks:
-      - shared
+      - shared_network_ref
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d fspdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
-  shared:
+  shared_network_ref:
     external: true
+    name: shared_network
+
+volumes:
+  fsp_db_data:
