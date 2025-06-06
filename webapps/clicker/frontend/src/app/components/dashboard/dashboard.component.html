@@ -1,0 +1,24 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Clicker App</h1>
+    <button (click)="logout()" class="logout-button">Logout</button>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="card welcome-card" *ngIf="user$ | async as user">
+      <h2>Welcome, {{ user.firstName }}!</h2>
+      <p>Logged in as {{ user.email }}</p>
+    </div>
+
+    <div class="card clicks-card" *ngIf="clicks$ | async as clicks">
+      <h2>Clicks</h2>
+      <p class="click-count">{{ clicks.count }}</p>
+      <div class="button-group">
+        <button (click)="increment()" class="action-button increment">
+          Click Me!
+        </button>
+        <button (click)="reset()" class="action-button reset">Reset</button>
+      </div>
+    </div>
+  </main>
+</div>

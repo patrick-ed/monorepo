@@ -1,0 +1,31 @@
+# Configuration for the 'dev' profile (local development)
+spring:
+  datasource:
+    # Assumes you have a local PostgreSQL server running on the default port
+    url: jdbc:postgresql://localhost:5432/clickerdb_dev
+    username: postgres # Replace with your local postgres user
+    password: postgres # Replace with your local postgres password
+  jpa:
+    hibernate:
+      ddl-auto: update # In dev, it's safe to let hibernate manage the schema
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            # These will be picked up from environment variables or you can hardcode them for local dev
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+app:
+  jwt:
+    # Value is taken from APP_JWT_SECRET env var
+    secret: ${APP_JWT_SECRET}
+    # Token validity: 7 days
+    expiration-ms: 604800000
+  oauth2:
+    # The production frontend URL to redirect to after successful login
+    authorized-redirect-uri: ${APP_URL_FRONTEND}/login/success

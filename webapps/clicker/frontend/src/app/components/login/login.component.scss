@@ -1,0 +1,36 @@
+// Basic styling for the login page
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+.login-card {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.login-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color: #4285F4;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  img {
+    width: 20px;
+    margin-right: 12px;
+    background: white;
+    border-radius: 50%;
+    padding: 2px;
+  }
+  &:hover {
+    background-color: #357ae8;
+  }
+}

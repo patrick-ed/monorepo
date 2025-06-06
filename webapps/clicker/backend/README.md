@@ -1,0 +1,1 @@
+./run.bat to export .env files and run ./gradlew.bat
