@@ -19,8 +19,6 @@
 
 **/.env
 **/*.env*
-**/application*.properties
-**/application*.yml
 **/config/**
 
 **/*.log
