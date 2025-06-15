@@ -1,0 +1,2 @@
+<button [disabled]="buttonDisabled()" (click)="sendPing()">Ping Backend</button>
+<p *ngIf="pingResponse">{{ pingResponse() }}</p>

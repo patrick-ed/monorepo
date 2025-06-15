@@ -15,6 +15,7 @@ services:
     container_name: template-backend
     restart: unless-stopped
     environment:
+      - ENVIRONMENT=${ENVIRONMENT}
       - SPRING_DATASOURCE_URL=${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
