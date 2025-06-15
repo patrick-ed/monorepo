@@ -13,7 +13,7 @@ services:
 
 networks:
   shared_network_ref:
-    driver: bridge
+    external: true
     name: shared_network
 
 volumes:
