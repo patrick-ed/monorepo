@@ -44,6 +44,10 @@ jobs:
             changed+=("main")
           fi
 
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/template/)" ]]; then
+            changed+=("template")
+          fi
+
           # convert to JSON
           json_changed=$(jq -nc '$ARGS.positional' --args "${changed[@]}")
           echo "changed_webapps=$json_changed" >> $GITHUB_OUTPUT
