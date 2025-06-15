@@ -12,7 +12,6 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-
 app:
   metadata:
     environment: ${ENVIRONMENT}
