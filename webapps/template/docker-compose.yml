@@ -1,0 +1,57 @@
+services:
+  template-frontend:
+    build: ./frontend
+    image: template-frontend:latest
+    container_name: template-frontend
+    restart: unless-stopped
+    networks:
+      - shared_network_ref
+    depends_on:
+      - template-backend 
+
+  template-backend:
+    build: ./backend
+    image: template-backend:latest
+    container_name: template-backend
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - APP_URL_FRONTEND=${FRONTEND_URL}
+      - APP_URL_BACKEND=${BACKEND_URL}
+    depends_on:
+      template-db:
+        condition: service_healthy
+    networks:
+      - internal_network
+      - shared_network_ref
+
+  template-db:
+    image: postgres:17
+    container_name: template-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - template_db_data:/var/lib/postgresql/data
+    networks:
+      - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  internal_network:
+    driver: bridge
+  shared_network_ref:
+    external: true
+    name: shared_network
+
+volumes:
+  template_db_data:
