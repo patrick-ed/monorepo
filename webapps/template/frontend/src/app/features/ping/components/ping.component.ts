@@ -11,18 +11,17 @@ import { CommonModule } from '@angular/common';
 export class PingComponent {
 
   private apiService = inject(ApiService);
-  pingResponse = signal<string>('No response yet');
   buttonDisabled = signal<boolean>(false);
+  timeLeft = signal<number>(0);
+  localClicks = signal<number>(0);
 
-  private BUTTON_DELAY_MS = 5000;
+  private BUTTON_DELAY_MS = 2000;
 
   sendPing() {
-    console.log('Ping sent to the backend');
+    console.log('Ping sent');
     this.apiService.pingBackend().subscribe({
       next: (response) => {
         this.handleSuccess(response)
-        this.buttonDisabled.set(true);
-        setTimeout(() => this.buttonDisabled.set(false), this.BUTTON_DELAY_MS);
       },
       error: (error) => {
         this.handleError(error)
@@ -30,14 +29,28 @@ export class PingComponent {
     });
   }
 
+  startCountdown() {
+    this.timeLeft.set(this.BUTTON_DELAY_MS / 1000);
+    const interval = setInterval(() => {
+      if (this.timeLeft() > 0) {
+        this.timeLeft.set(this.timeLeft() - 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000);
+  }
+
   private handleSuccess(response: string) {
-    console.log('Response from backend:', response);
-    this.pingResponse.set(response);
+    console.log('Server Response:', response);
+
+    this.startCountdown();
+    this.buttonDisabled.set(true);
+    this.localClicks.set(this.localClicks() + 1);
+
+    setTimeout(() => this.buttonDisabled.set(false), this.BUTTON_DELAY_MS);
   }
 
   private handleError(error: any) {
-    console.error('Error pinging backend:', error);
-    this.pingResponse.set('Error pinging backend');
+    console.error('Server Error:', error);
   }
-
 }

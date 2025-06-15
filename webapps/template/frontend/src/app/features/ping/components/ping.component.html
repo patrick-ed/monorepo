@@ -1,2 +1,13 @@
-<button [disabled]="buttonDisabled()" (click)="sendPing()">Ping Backend</button>
-<p *ngIf="pingResponse">{{ pingResponse() }}</p>
+<div class="card">
+  @if (buttonDisabled()) {
+  <button [disabled]="buttonDisabled()" (click)="sendPing()">
+    cooldown: {{ timeLeft() }}s
+  </button>
+  } @else {
+  <button [disabled]="buttonDisabled()" (click)="sendPing()">ping</button>
+  }
+
+  @if (localClicks() > 0) {
+  <p>local clicks: {{ localClicks() }}</p>
+  }
+</div>
