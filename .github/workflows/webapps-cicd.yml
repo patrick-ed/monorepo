@@ -26,6 +26,7 @@ jobs:
         uses: tj-actions/changed-files@v44
         with:
           files: |
+            webapps/template/**
             webapps/fullstackproject/**
             webapps/main/**
 
