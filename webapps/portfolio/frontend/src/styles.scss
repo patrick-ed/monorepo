@@ -1,0 +1,17 @@
+:root{
+    --primary-color: #4a90e2;
+    --secondary-color: #50e3c2;
+    --background-color: #f5f7fa;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+}
+
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Important for some layout techniques */
+    font-family: 'Wotfard', sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+  }
