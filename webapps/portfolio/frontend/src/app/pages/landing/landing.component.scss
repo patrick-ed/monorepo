@@ -1,0 +1,20 @@
+
+:host {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p{
+    margin-bottom: 1.5rem;
+}
+  
+.hero-container {
+    text-align: center;
+}
+
+h1 {
+    font-size: 5rem;
+    font-weight: bolder
+}

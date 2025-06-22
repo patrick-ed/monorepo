@@ -1,16 +1,21 @@
 :root{
     --primary-color: #4a90e2;
     --secondary-color: #50e3c2;
-    --background-color: #f5f7fa;
-    --text-color: #333333;
+    --background-color: #F0F0F0;
+    --text-color: #232323;
     --border-color: #e0e0e0;
+
+    --font-m: 1rem;
+
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
 }
 
 
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%; /* Important for some layout techniques */
+    height: 100%;
     font-family: 'Wotfard', sans-serif;
     color: var(--text-color);
     background-color: var(--background-color);

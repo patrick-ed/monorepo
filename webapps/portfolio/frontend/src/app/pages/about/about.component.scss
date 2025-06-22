@@ -4,13 +4,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-  
-.hero-container {
-    text-align: center;
+    font-size: var(--font-m);
+    padding: 0 15vh;
 }
 
-h1 {
-    font-size: 5rem;
-    font-weight: bolder
+.about-header{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+p{
+    max-width: 600px;
 }
