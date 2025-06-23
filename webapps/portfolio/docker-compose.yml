@@ -1,0 +1,15 @@
+services:
+  portfolio-frontend:
+    build: ./frontend
+    image: portfolio-frontend:latest
+    container_name: portfolio-frontend
+    restart: unless-stopped
+    networks:
+      - shared_network_ref
+  
+networks:
+  internal_network:
+    driver: bridge
+  shared_network_ref:
+    external: true
+    name: shared_network
