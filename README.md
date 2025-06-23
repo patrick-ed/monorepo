@@ -13,9 +13,9 @@ for now this monorepo holds the code for my websites under [patrickdd.com](http:
 This monorepo hosts all of the code to my public webapps. It is complete with cicd using github workflows and custom bash scripts. Consisder all of these webapps to be WIP.
 
 ### Webapps
-- [patrickdd.com](http://patrickdumdum.com/) - Portfolio
-- [template.patrickdd.com](http://template.patrickdumdum.com/) - Template fullstack webapp, simple clicker.
-- [fsp.patrickdd.com](http://fsp.patrickdumdum.com/) - Under construction
+- [patrickdd.com](http://patrickdd.com/) - Portfolio
+- [template.patrickdd.com](http://template.patrickdd.com/) - Template fullstack webapp, simple clicker.
+- [fsp.patrickdd.com](http://fsp.patrickdd.com/) - Under construction
 
 ### structure
 
