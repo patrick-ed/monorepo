@@ -18,3 +18,9 @@ h1 {
     font-size: 5rem;
     font-weight: bolder
 }
+.button-list{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-direction: column;
+}

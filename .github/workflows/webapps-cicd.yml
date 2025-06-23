@@ -29,6 +29,7 @@ jobs:
             webapps/template/**
             webapps/fullstackproject/**
             webapps/main/**
+            webapps/portfolio/**
 
       - name: Track changed webapps in json array
         id: set-outputs
@@ -46,6 +47,10 @@ jobs:
 
           if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/template/)" ]]; then
             changed+=("template")
+          fi
+
+                    if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/portfolio/)" ]]; then
+            changed+=("portfolio")
           fi
 
           # convert to JSON
