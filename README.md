@@ -8,30 +8,31 @@ with that being said this is my fully dockerised monorepo complete with a CI/CD 
 
 for now this monorepo holds the code for my websites under [patrickdd.com](http://patrickdumdum.com/) and [patrickdumdum.com](https://patrickdumdum.com/) and i plan to build other projects on this monorepo but this mainly hosts my webapps.
 
-### Development
+## Development
 
-Frontend - Angular v19+
-Backend - Springboot (Kotlin), JDK 21 
-Database - psql 17
+Typical techstack of a webapp:
+- Frontend - Angular v19+
+- Backend - Springboot (Kotlin), JDK 21 
+- Database - psql 17
 
 For each webapp, installation remains practically the same as they all use very similar techstacks: 
 - git clone `https://github.com/patrick-ed/monorepo.git`
 - cd into which ever webapp you want to develop: `cd webapps/[webappname]`
 - For full webapp functionallity, frontend and backend should be running
 
-#### Frontend development
+### Frontend development
 - cd into `frontend`
 - To start the application: `ng serve`
 - Frontend hosted at `localhost:4200`
 
-#### Backend development
+### Backend development
 - cd into `backend`
 - If applicable create a new `.env` file and follow the tempate in `.env-template`
 - This also usually involves making a database using psql. database names are usually `[webappname]-db`
 - To start the application: `./gradlew bootrun`
 - Backend hosted at `localhost:8080`
 
-#### Docker
+### Docker
 You also have the option to use docker to develop:
 - cd into which ever webapp you want to develop: `cd webapps/[webappname]`
 - Run `docker compose up -d`
