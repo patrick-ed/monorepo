@@ -1,0 +1,11 @@
+# Build
+FROM eclipse-temurin:21-jdk-alpine as builder
+WORKDIR /workspace
+COPY . .
+RUN chmod +x gradlew
+RUN ./gradlew build -x test
+
+# Start Server
+FROM eclipse-temurin:21-jre-alpine
+COPY --from=builder /workspace/build/libs/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

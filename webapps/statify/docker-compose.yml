@@ -1,0 +1,33 @@
+services:
+  statify-frontend:
+    build: ./frontend
+    image: statify-frontend:latest
+    container_name: statify-frontend
+    restart: unless-stopped
+    networks:
+      - shared_network_ref
+    depends_on:
+      - statify-backend 
+
+  statify-backend:
+    build: ./backend
+    image: statify-backend:latest
+    container_name: statify-backend
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - APP_URL_FRONTEND=${FRONTEND_URL}
+      - APP_URL_BACKEND=${BACKEND_URL}
+    networks:
+      - internal_network
+      - shared_network_ref
+
+networks:
+  internal_network:
+    driver: bridge
+  shared_network_ref:
+    external: true
+    name: shared_network
+
+volumes:
+  template_db_data:

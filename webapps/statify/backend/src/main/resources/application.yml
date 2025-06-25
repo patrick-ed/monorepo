@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: template
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+app:
+  metadata:
+    environment: ${ENVIRONMENT}
+  url:
+    frontend: ${FRONTEND_URL}
+    backend: ${BACKEND_URL}
