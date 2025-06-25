@@ -1,16 +1,12 @@
-# This is template
+# This is statify
 
-This template is a very simple full stack app
-It has one table being ping_stats which keeps track of the total amount of pings
+Statistics + Spotify = statify
 
-A user can ping in the route frontend/ping or backend/api/v1/ping
-A user can view the total pings in TODO(frontend/ping/stats) or backend/api/v1/ping/stats
+Complete refactor of `http://github.com/patrick-ed/Spotify-App`
 
 ## Developing
 
 - set up .env using .env-template
-- Create a db with name "templatedb"
-- Connect to templatedb and run `INSERT INTO ping_stats VALUES(0,0,'total_pings');`
 
 ## TODO
 
