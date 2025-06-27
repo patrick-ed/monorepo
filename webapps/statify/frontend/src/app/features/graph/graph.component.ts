@@ -2,8 +2,8 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import * as testData from './testData.json';
 import { ForceNodeDatum } from '../../core/d3/interfaces';
-import d3, { HierarchyLink } from 'd3';
-import { ForceNode, ForceSimulation, GSelection, SvgZoom, ZoomEvent, DragBehavior } from '../../core/d3/types';
+import * as d3 from 'd3';
+import { ForceNode, ForceSimulation, GSelection, SvgZoom, ZoomEvent, DragBehavior, HierarchyLink } from '../../core/d3/types';
 
 @Component({
   selector: 'app-graph',
