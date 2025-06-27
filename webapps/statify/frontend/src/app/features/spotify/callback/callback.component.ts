@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/spotify/auth.service';
-import { ENV } from '../../../../environments/environment.development';
+import { ENV } from '../../../../environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
