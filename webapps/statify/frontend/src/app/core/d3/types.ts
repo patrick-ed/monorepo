@@ -7,10 +7,10 @@ export type GSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
 
 export type ForceNode = D3Node<ForceNodeDatum> & d3.SimulationNodeDatum;
 export type ForceSimulation = d3.Simulation<ForceNode, undefined>
-export type HierarchyLink<T> = d3.HierarchyLink<T>
+export type HierarchyLink<T> = d3.HierarchyLink<T>;
 
 export type ZoomEvent = d3.D3ZoomEvent<SVGSVGElement, unknown>
 export type SvgZoom = d3.ZoomBehavior<SVGSVGElement, unknown>;
 
-export type DragEvent<T> = d3.D3DragEvent<SVGCircleElement, ForceNode, unknown>;
-export type DragBehavior<T> = d3.DragBehavior<SVGCircleElement, ForceNode, unknown>
+export type DragEvent = d3.D3DragEvent<SVGCircleElement, ForceNode, unknown>;
+export type DragBehavior = d3.DragBehavior<SVGCircleElement, ForceNode, unknown>

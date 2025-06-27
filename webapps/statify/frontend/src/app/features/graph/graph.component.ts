@@ -1,8 +1,8 @@
-import { DragBehavior, ForceNode, ForceSimulation, GSelection, HierarchyLink, SvgZoom, ZoomEvent } from '../../core/d3/types';
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import * as data from './testData.json';
-import * as d3 from 'd3';
+import * as testData from './testData.json';
 import { ForceNodeDatum } from '../../core/d3/interfaces';
+import * as d3 from 'd3';
+import { ForceNode, ForceSimulation, GSelection, SvgZoom, ZoomEvent, DragBehavior, HierarchyLink } from '../../core/d3/types';
 
 @Component({
   selector: 'app-graph',
@@ -15,10 +15,12 @@ export class GraphComponent implements AfterViewInit {
 
 
   @ViewChild('svg') private svgElement!: ElementRef<SVGSVGElement>;
+  private testData = testData as ForceNodeDatum;
 
   ngAfterViewInit(): void {
+    const data = this.testData;
     if (data && this.svgElement.nativeElement) {
-      this.createChart(data as ForceNodeDatum);
+      this.createChart(data);
     }
   }
 
@@ -30,7 +32,7 @@ export class GraphComponent implements AfterViewInit {
     const links = root.links();
     const nodes = root.descendants() as ForceNode[];
 
-    const drag = (simulation: ForceSimulation): DragBehavior<ForceNodeDatum> => {
+    const drag = (simulation: ForceSimulation): DragBehavior => {
       function dragstarted(event: any, d: ForceNode) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
