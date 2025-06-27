@@ -22,6 +22,7 @@ ssh -o ServerAliveInterval=60 -p "$PORT" "pi-deploy" <<EOF
   echo "[server] Cleaning up old files"
   rm -rf "$REMOTE_DIR" || true
   mkdir -p "$REMOTE_DIR"
+  mkdir -p "$FRONTEND_DIR/src/environments"
 
   echo "[server] Restoring .env..."
   mv /tmp/.env_backup_root "$REMOTE_DIR/.env" 2>/dev/null || true
