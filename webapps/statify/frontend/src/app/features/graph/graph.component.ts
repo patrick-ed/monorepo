@@ -1,9 +1,8 @@
-import { DragBehavior, ForceNode, ForceSimulation, GSelection, HierarchyLink, SvgZoom, ZoomEvent } from '../../core/types/d3Types';
+import { DragBehavior, ForceNode, ForceSimulation, GSelection, HierarchyLink, SvgZoom, ZoomEvent } from '../../core/d3/types';
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { TestData } from './testData';
 import * as data from './testData.json';
 import * as d3 from 'd3';
-type TestDataForceNode = ForceNode<TestData>;
+import { ForceNodeDatum } from '../../core/d3/interfaces';
 
 @Component({
   selector: 'app-graph',
@@ -19,41 +18,44 @@ export class GraphComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (data && this.svgElement.nativeElement) {
-      this.createChart(data as TestData);
+      this.createChart(data as ForceNodeDatum);
     }
   }
 
-  private createChart(chartData: TestData): void {
+  private createChart(chartData: ForceNodeDatum): void {
     const width = this.svgElement.nativeElement.clientWidth;
     const height = this.svgElement.nativeElement.clientHeight;
 
     const root = d3.hierarchy(chartData);
     const links = root.links();
-    const nodes = root.descendants() as ForceNode<TestData>[];
+    const nodes = root.descendants() as ForceNode[];
 
-    const drag = (simulation: ForceSimulation<TestData>): DragBehavior<TestData> => {
-      function dragstarted(event: any, d: ForceNode<TestData>) {
+    const drag = (simulation: ForceSimulation): DragBehavior<ForceNodeDatum> => {
+      function dragstarted(event: any, d: ForceNode) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
       }
-      function dragged(event: DragEvent, d: TestDataForceNode) {
+      function dragged(event: DragEvent, d: ForceNode) {
         d.fx = event.x;
         d.fy = event.y;
       }
-      function dragended(event: any, d: TestDataForceNode) {
+      function dragended(event: any, d: ForceNode) {
         if (!event.active) simulation.alphaTarget(0);
         d.fx = null;
         d.fy = null;
       }
-      return d3.drag<SVGCircleElement, TestDataForceNode>()
+      return d3.drag<SVGCircleElement, ForceNode>()
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended);
     };
 
     const simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink<TestDataForceNode, HierarchyLink<TestData>>(links).id(d => d.id!).distance(50).strength(1))
+      .force("link", d3.forceLink<ForceNode, HierarchyLink<ForceNodeDatum>>(links)
+        .id(d => d.id!)
+        .distance(50)
+        .strength(1))
       .force("charge", d3.forceManyBody().strength(-400))
       .force("center", d3.forceCenter(width / 2, height / 2));
 
@@ -72,7 +74,7 @@ export class GraphComponent implements AfterViewInit {
     const node = container.append("g")
       .attr("stroke", "#fff")
       .attr("stroke-width", 1.5)
-      .selectAll<SVGCircleElement, TestDataForceNode>("circle")
+      .selectAll<SVGCircleElement, ForceNode>("circle")
       .data(nodes)
       .join("circle")
       .attr("r", 5)
@@ -84,10 +86,10 @@ export class GraphComponent implements AfterViewInit {
 
     simulation.on("tick", () => {
       link
-        .attr("x1", d => (d.source as TestDataForceNode).x!)
-        .attr("y1", d => (d.source as TestDataForceNode).y!)
-        .attr("x2", d => (d.target as TestDataForceNode).x!)
-        .attr("y2", d => (d.target as TestDataForceNode).y!);
+        .attr("x1", d => (d.source as ForceNode).x!)
+        .attr("y1", d => (d.source as ForceNode).y!)
+        .attr("x2", d => (d.target as ForceNode).x!)
+        .attr("y2", d => (d.target as ForceNode).y!);
       node
         .attr("cx", d => d.x!)
         .attr("cy", d => d.y!);

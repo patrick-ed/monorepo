@@ -5,5 +5,4 @@ import { GraphComponent } from './features/graph/graph.component';
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'graph', component: GraphComponent },
-    { path: '**', redirectTo: '' },
 ];
