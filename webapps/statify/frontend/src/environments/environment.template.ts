@@ -1,4 +1,4 @@
-export const environment = {
+export const ENV = {
     PRODUCTION: null,
     SPOTIFY: {
         REDIRECT_URI: 'REPLACE',
