@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ENV } from '../../../../environments/environment.development';
+import { ENV } from '../../../../environments/environment';
 import { GeneralUtilsService } from '../utils/general-utils.service';
 import { Observable, throwError, tap, catchError } from 'rxjs';
 
