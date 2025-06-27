@@ -17,7 +17,7 @@ ssh -o ServerAliveInterval=60 -p "$PORT" "pi-deploy" <<EOF
   echo "[server] Backing up .env..."
   cp "$REMOTE_DIR/.env" /tmp/.env_backup_root || true
   cp "$BACKEND_DIR/.env" /tmp/.env_backup_backend || true
-  cp "$FRONTEND_DIR/.env" /tmp/.env_backup_frontend || true
+  cp "$FRONTEND_DIR/src/environments/environment.ts" /tmp/.env_backup_frontend || true
 
   echo "[server] Cleaning up old files"
   rm -rf "$REMOTE_DIR" || true
@@ -26,7 +26,7 @@ ssh -o ServerAliveInterval=60 -p "$PORT" "pi-deploy" <<EOF
   echo "[server] Restoring .env..."
   mv /tmp/.env_backup_root "$REMOTE_DIR/.env" 2>/dev/null || true
   mv /tmp/.env_backup_backend "$BACKEND_DIR/.env" 2>/dev/null || true
-  mv /tmp/.env_backup_frontend "$FRONTEND_DIR/.env" 2>/dev/null || true
+  mv /tmp/.env_backup_frontend "$FRONTEND_DIR/src/environments/environment.ts" 2>/dev/null || true
 EOF
 
 # Upload project files to Raspberry Pi
