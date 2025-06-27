@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../../core/services/spotify/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  private spotifyAuthService = inject(AuthService);
 
+  login() {
+    this.spotifyAuthService.redirectToSpotifyLogin();
+  }
 }

@@ -1,4 +1,4 @@
-# Template
+# Statify
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.9.
 
@@ -7,10 +7,11 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 To start a local development server, run:
 
 ```bash
-ng serve
+ng serve --host 127.0.0.1
 ```
+USE `127.0.0.1` as spotifyAPI only allows insecure connections using `127.0.0.1`.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Once the server is running, open your browser and navigate to `http://127.0.0.1:4200/`. The application will automatically reload whenever you modify any of the source files.
 
 ## Code scaffolding
 
