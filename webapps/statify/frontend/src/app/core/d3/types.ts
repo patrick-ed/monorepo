@@ -4,7 +4,6 @@ import { ForceNodeDatum } from './interfaces';
 export type D3Node<T> = d3.HierarchyNode<T>;
 export type SvgSelection = d3.Selection<SVGSVGElement, unknown, null, undefined>;
 export type GSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
-export type HierarchyLink<T> = d3.HierarchyLink<T>;
 
 export type ForceNode = D3Node<ForceNodeDatum> & d3.SimulationNodeDatum;
 export type ForceSimulation = d3.Simulation<ForceNode, undefined>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Graphv2Component } from './graph3d.component';
+import { Graph3dComponent } from './graph3d.component';
 
-describe('Graphv2Component', () => {
-  let component: Graphv2Component;
-  let fixture: ComponentFixture<Graphv2Component>;
+describe('Graph3dComponent', () => {
+  let component: Graph3dComponent;
+  let fixture: ComponentFixture<Graph3dComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Graphv2Component]
+      imports: [Graph3dComponent]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(Graphv2Component);
+    fixture = TestBed.createComponent(Graph3dComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

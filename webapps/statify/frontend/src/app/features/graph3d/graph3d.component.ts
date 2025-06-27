@@ -9,7 +9,6 @@ import { AfterViewInit, Component } from '@angular/core';
 })
 export class Graph3dComponent implements AfterViewInit {
 
-
   ngAfterViewInit(): void {
 
     const elem = document.getElementById("3d-graph");
