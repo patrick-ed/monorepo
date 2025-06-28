@@ -62,7 +62,6 @@ export class AuthService {
    */
   exchangeCodeForToken(code: string): Observable<TokenResponse> {
     const codeVerifier = localStorage.getItem('code_verifier');
-    console.log('1Code Verifier:', codeVerifier);
     if (!codeVerifier) {
       return throwError(() => new Error('Code verifier not found in localStorage.'));
     }
