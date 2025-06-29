@@ -47,7 +47,8 @@ This monorepo hosts all of the code to my public webapps. It is complete with ci
 ### Webapps
 - [patrickdd.com](http://patrickdd.com/) - Portfolio
 - [template.patrickdd.com](http://template.patrickdd.com/) - Template fullstack webapp, simple clicker.
-- [fsp.patrickdd.com](http://fsp.patrickdd.com/) - Under construction
+- [fsp.patrickdd.com](http://fsp.patrickdd.com/) - (Soon to be demolished)
+- [statify.patrickdd.com](https://statify.patrickdd.com/graph3d) - Spotify genre force graph. (Under construction)
 
 ### structure
 
