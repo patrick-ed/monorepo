@@ -43,7 +43,7 @@ export class CallbackComponent implements OnInit {
 
   private handleSuccess(response: any) {
     console.log('Successfully obtained token!', response);
-    this.router.navigate(['/'], { queryParams: { success: 'auth_success' } });
+    this.router.navigate(['/dashboard'], { queryParams: { success: 'auth_success' } });
   }
 
   private handleError(error: any) {
