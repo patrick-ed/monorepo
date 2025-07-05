@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CallbackComponent } from '../../../features/spotify/callback/callback.component';
 
-import { CallbackComponent } from './callback.component';
 
 describe('CallbackComponent', () => {
   let component: CallbackComponent;
@@ -10,7 +10,7 @@ describe('CallbackComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CallbackComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CallbackComponent);
     component = fixture.componentInstance;

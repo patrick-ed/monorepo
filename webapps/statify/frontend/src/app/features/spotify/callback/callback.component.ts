@@ -6,8 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-callback',
   imports: [],
-  templateUrl: './callback.component.html',
-  styleUrl: './callback.component.scss'
+  template: '',
 })
 export class CallbackComponent implements OnInit {
 

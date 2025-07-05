@@ -7,6 +7,16 @@ export class UtilsService {
 
   constructor() { }
 
+  
+
+  public getArtistIds(){
+
+  }
+
+  public getDetailedArtists(){
+
+  }
+
   public countOccurences<T extends string>(item: T, dictionary: { [key: string]: number }) {
 
     if (!(item in dictionary)) {
