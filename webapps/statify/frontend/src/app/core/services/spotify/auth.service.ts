@@ -9,50 +9,44 @@ import { Observable, throwError, tap, catchError } from 'rxjs';
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private generalUtilsService = inject(GeneralUtilsService);
 
-  constructor(private generalUtilsService: GeneralUtilsService) { }
+  private readonly CLIENT_ID = ENV.SPOTIFY.CLIENT_ID;
+  private readonly REDIRECT_URI = ENV.SPOTIFY.REDIRECT_URI;
+  private readonly AUTH_URL = ENV.SPOTIFY.AUTH_URL;
+  private readonly TOKEN_URL = ENV.SPOTIFY.TOKEN_URL;
+  private readonly SCOPE = 'user-read-private user-read-email user-library-read';
 
-  CLIENT_ID = ENV.SPOTIFY.CLIENT_ID;
-  CLIENT_SECRET = ENV.SPOTIFY.CLIENT_SECRET;
-  REDIRECT_URI = ENV.SPOTIFY.REDIRECT_URI;
-  AUTH_URL = ENV.SPOTIFY.AUTH_URL;
-  TOKEN_URL = ENV.SPOTIFY.TOKEN_URL;
-
-  private getCodeVerifier() {
+  private getCodeVerifier(): string {
     return this.generalUtilsService.generateRandomString(64);
   }
 
   private async getCodeChallenge(codeVerifier: string): Promise<string> {
     const digest = await this.generalUtilsService.sha256(codeVerifier);
-    const codeChallenge = this.generalUtilsService.base64UrlEncode(digest);
-    return codeChallenge;
+    return this.generalUtilsService.base64UrlEncode(digest);
   }
 
-  private getParams(codeChallenge: string): { [key: string]: string } {
-
-    const scope = 'user-read-private user-read-email user-library-read';
-    return {
-      response_type: 'code',
-      client_id: this.CLIENT_ID,
-      scope: scope,
-      code_challenge_method: 'S256',
-      code_challenge: codeChallenge,
-      redirect_uri: this.REDIRECT_URI,
-    }
-  }
-
-  redirectToSpotifyLogin() {
+  async redirectToSpotifyLogin(): Promise<void> {
     const codeVerifier = this.getCodeVerifier();
-    window.localStorage.setItem('code_verifier', codeVerifier);
+    localStorage.setItem('code_verifier', codeVerifier);
 
-    this.getCodeChallenge(codeVerifier).then((challenge) => {
-      const params = this.getParams(challenge);
-      const queryString = new URLSearchParams(params).toString();
-      const authUrl = `${this.AUTH_URL}?${queryString}`;
-      window.location.href = authUrl;
-    }).catch((error) => {
+    try {
+      const codeChallenge = await this.getCodeChallenge(codeVerifier);
+      const params = new HttpParams({
+        fromObject: {
+          response_type: 'code',
+          client_id: this.CLIENT_ID,
+          scope: this.SCOPE,
+          code_challenge_method: 'S256',
+          code_challenge: codeChallenge,
+          redirect_uri: this.REDIRECT_URI,
+        },
+      });
+
+      window.location.href = `${this.AUTH_URL}?${params.toString()}`;
+    } catch (error) {
       console.error('Error generating code challenge:', error);
-    });
+    }
   }
 
   /**
@@ -63,7 +57,9 @@ export class AuthService {
   exchangeCodeForToken(code: string): Observable<TokenResponse> {
     const codeVerifier = localStorage.getItem('code_verifier');
     if (!codeVerifier) {
-      return throwError(() => new Error('Code verifier not found in localStorage.'));
+      return throwError(
+        () => new Error('Code verifier not found in localStorage.')
+      );
     }
 
     const body = new HttpParams()
@@ -74,22 +70,21 @@ export class AuthService {
       .set('code_verifier', codeVerifier);
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
     });
 
-    return this.http.post<TokenResponse>(this.TOKEN_URL, body.toString(), { headers }).pipe(
-
-      // Handle the response and store tokens in localStorage
-      tap(response => {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
-      }),
-      // Handle errors
-      catchError(error => {
-        console.error("Error exchanging code for token:", error);
-        return throwError(() => new Error('Failed to exchange code for token.'));
-      })
-    );
+    return this.http
+      .post<TokenResponse>(this.TOKEN_URL, body.toString(), { headers })
+      .pipe(
+        tap((response) => {
+          localStorage.setItem('access_token', response.access_token);
+          localStorage.setItem('refresh_token', response.refresh_token);
+        }),
+        catchError((error) => {
+          console.error('Error exchanging code for token:', error);
+          return throwError(() => new Error('Failed to exchange code for token.'));
+        })
+      );
   }
 }
 

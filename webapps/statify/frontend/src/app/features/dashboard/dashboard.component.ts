@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/spotify/auth.service';
 import { ApiService } from '../../core/services/spotify/api.service';
 import { Track } from '../../core/models/spotify.model';
+import { UtilsService } from '../../core/services/spotify/utils.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +13,11 @@ import { Track } from '../../core/models/spotify.model';
 })
 export class DashboardComponent implements AfterViewInit {
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private spotifyUtils: UtilsService
+  ) { }
+
   private spotifyApiService = inject(ApiService);
   private likedTracks: Track[] = [];
 
@@ -31,13 +36,13 @@ export class DashboardComponent implements AfterViewInit {
     });
   }
 
-  public onClickFetchUserLikedTracks() {
-    this.fetchUserLikedTracks();
+  public onClickFetchUserSavedTracks() {
+    this.fetchUserSavedTracks();
   }
 
-  private fetchUserLikedTracks() {
+  private fetchUserSavedTracks() {
     const limit = 50
-    this.spotifyApiService.getUserLikedTracks(limit).subscribe({
+    this.spotifyApiService.getUserSavedTracks(limit).subscribe({
       next: (tracks) => {
         this.likedTracks = tracks.items;
         console.log('Liked Tracks:', this.likedTracks);
