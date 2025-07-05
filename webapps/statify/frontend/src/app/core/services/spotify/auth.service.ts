@@ -30,7 +30,7 @@ export class AuthService {
 
   private getParams(codeChallenge: string): { [key: string]: string } {
 
-    const scope = 'user-read-private user-read-email';
+    const scope = 'user-read-private user-read-email user-library-read';
     return {
       response_type: 'code',
       client_id: this.CLIENT_ID,

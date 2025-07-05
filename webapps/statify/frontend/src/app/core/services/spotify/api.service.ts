@@ -29,6 +29,10 @@ export class ApiService {
     return this.http.get<UserProfile>(`${this.API_BASE_URL}/me`, { headers: this.getAuthHeaders() });
   }
 
+  public getUserLikedTracks(limit: number = 20, offset: number = 0): Observable<any> {
+    return this.http.get<UserProfile>(`${this.API_BASE_URL}/me/tracks?limit=${limit}&offset=${offset}`, { headers: this.getAuthHeaders() });
+  }
+
   /**
    * Logs user out by clearing the access token and removing it from local storage.
    * 

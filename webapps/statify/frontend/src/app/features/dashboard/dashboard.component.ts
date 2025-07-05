@@ -2,6 +2,7 @@ import { AfterViewInit, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/spotify/auth.service';
 import { ApiService } from '../../core/services/spotify/api.service';
+import { Track } from '../../core/models/spotify.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ export class DashboardComponent implements AfterViewInit {
 
   constructor(private router: Router) { }
   private spotifyApiService = inject(ApiService);
+  private likedTracks: Track[] = [];
 
   ngAfterViewInit(): void {
     this.redirectIfNotLoggedIn();
@@ -25,6 +27,23 @@ export class DashboardComponent implements AfterViewInit {
       },
       error: (error) => {
         console.error('Error fetching user profile:', error);
+      }
+    });
+  }
+
+  public onClickFetchUserLikedTracks() {
+    this.fetchUserLikedTracks();
+  }
+
+  private fetchUserLikedTracks() {
+    const limit = 50
+    this.spotifyApiService.getUserLikedTracks(limit).subscribe({
+      next: (tracks) => {
+        this.likedTracks = tracks.items;
+        console.log('Liked Tracks:', this.likedTracks);
+      },
+      error: (error) => {
+        console.error('Error fetching user liked tracks:', error);
       }
     });
   }
