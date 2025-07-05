@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserProfile } from '../../models/spotify.model';
+import { Artist, Track, UserProfile } from '../../models/spotify.model';
 import { ENV } from '../../../../environments/environment';
 import { LoadTopItemsInput } from './inputs';
 
@@ -24,27 +24,26 @@ export class ApiService {
    * @returns An Observable of UserProfile containing user details.
    */
   public getUserProfile(): Observable<UserProfile> {
-    return this.http.get<UserProfile>(`${this.API_BASE_URL}/me`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.get<UserProfile>('me');
   }
 
   public getUserSavedTracks(
     limit: number = 20,
     offset: number = 0
   ): Observable<any> {
-    return this.http.get<UserProfile>(
-      `${this.API_BASE_URL}/me/tracks?limit=${limit}&offset=${offset}`,
-      { headers: this.getAuthHeaders() }
-    );
+    return this.get<any>('me/tracks', { limit, offset });
   }
 
-  public getUserTopItems(loadTopItemsInput: LoadTopItemsInput): Observable<any> {
-    const { type, timeRange, limit = 20, offset = 0 } = loadTopItemsInput;
-    return this.http.get<any>(
-      `${this.API_BASE_URL}/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
-      { headers: this.getAuthHeaders() }
-    );
+  public getUserTopItems(loadTopItemsInput: LoadTopItemsInput): Observable<Artist[] | Track[]> {
+
+    const defaultLimit = 20;
+    const defaultOffset = 0;
+
+    return this.get<Artist[] | Track[]>(`me/top/${loadTopItemsInput.type}`, {
+      time_range: loadTopItemsInput.timeRange,
+      limit: loadTopItemsInput.limit || defaultLimit,
+      offset: loadTopItemsInput.offset || defaultOffset,
+    });
   }
 
   /**
@@ -59,6 +58,15 @@ export class ApiService {
 
   public isAuthenticated(): boolean {
     return !!this.accessToken();
+  }
+
+  private get<T>(endpoint: string, params?: { [param: string]: string | number }): Observable<T> {
+    const url = `${this.API_BASE_URL}/${endpoint}`;
+
+    return this.http.get<T>(url, {
+      headers: this.getAuthHeaders(),
+      params,
+    });
   }
 
   private getAuthHeaders(): HttpHeaders {

@@ -4,6 +4,7 @@ import { AuthService } from '../../core/services/spotify/auth.service';
 import { ApiService } from '../../core/services/spotify/api.service';
 import { Track } from '../../core/models/spotify.model';
 import { UtilsService } from '../../core/services/spotify/utils.service';
+import { TopItemsTimeRange, TopItemsType } from '../../core/services/spotify/inputs';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,22 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   public onClickFetchUserProfile() {
+    this.fetchUserProfile();
+  }
+
+  public onClickFetchUserSavedTracks() {
+    this.fetchUserSavedTracks();
+  }
+
+  public onClickFetchUserTopTracks() {
+    this.fetchUserTopTracks();
+  }
+
+  public onClickFetchUserTopArtists() {
+    this.fetchUserTopArtists();
+  }
+
+  private fetchUserProfile() {
     this.spotifyApiService.getUserProfile().subscribe({
       next: (userProfile) => {
         console.log('User Profile:', userProfile);
@@ -36,8 +53,40 @@ export class DashboardComponent implements AfterViewInit {
     });
   }
 
-  public onClickFetchUserSavedTracks() {
-    this.fetchUserSavedTracks();
+  private fetchUserTopTracks() {
+    const loadTopItemsInput = {
+      type: TopItemsType.TRACKS,
+      timeRange: TopItemsTimeRange.LONG_TERM,
+      limit: 20,
+      offset: 0
+    }
+
+    this.spotifyApiService.getUserTopItems(loadTopItemsInput).subscribe({
+      next: (tracks) => {
+        console.log('Top Tracks:', tracks);
+      },
+      error: (error) => {
+        console.error('Error fetching user top tracks:', error);
+      }
+    });
+  }
+
+  private fetchUserTopArtists() {
+    const loadTopItemsInput = {
+      type: TopItemsType.ARTISTS,
+      timeRange: TopItemsTimeRange.LONG_TERM,
+      limit: 20,
+      offset: 0
+    }
+
+    this.spotifyApiService.getUserTopItems(loadTopItemsInput).subscribe({
+      next: (tracks) => {
+        console.log('Top Artists:', tracks);
+      },
+      error: (error) => {
+        console.error('Error fetching user top artists:', error);
+      }
+    });
   }
 
   private fetchUserSavedTracks() {

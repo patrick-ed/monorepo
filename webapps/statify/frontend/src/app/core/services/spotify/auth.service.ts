@@ -15,7 +15,7 @@ export class AuthService {
   private readonly REDIRECT_URI = ENV.SPOTIFY.REDIRECT_URI;
   private readonly AUTH_URL = ENV.SPOTIFY.AUTH_URL;
   private readonly TOKEN_URL = ENV.SPOTIFY.TOKEN_URL;
-  private readonly SCOPE = 'user-read-private user-read-email user-library-read';
+  private readonly SCOPE = 'user-read-private user-read-email user-library-read user-top-read';
 
   private getCodeVerifier(): string {
     return this.generalUtilsService.generateRandomString(64);
