@@ -10,10 +10,22 @@ export interface UserProfile {
   product: string;
 }
 
+/**
+ * Spotify only provides full artist details from the `/artists` endpoint.
+ */
 export interface Artist {
   id: string;
   name: string;
+  href: string;
+  external_urls: { spotify: string };
+  uri: string;
+  type: string;
+}
+
+export interface ArtistDetails extends Artist {
   genres: string[];
+  popularity: number;
+  followers: { total: number };
   images: ImageObject[];
 }
 
@@ -24,16 +36,19 @@ export interface Album {
   release_date: string;
 }
 
-export interface Track {
-  id: string;
-  name: string;
-  artists: Artist[];
-  album: Album;
-  duration_ms: number;
-  preview_url: string | null;
+export interface TrackDetails {
+  added_at: string;
+  track: {
+    id: string;
+    name: string;
+    artists: Artist[];
+    album: Album;
+    duration_ms: number;
+    preview_url: string | null;
+  }
 }
 
-export interface PagingObject<T> {
+export interface Paging<T> {
   items: T[];
   total: number;
   limit: number;

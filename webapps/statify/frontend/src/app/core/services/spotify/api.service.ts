@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Artist, Track, UserProfile } from '../../models/spotify.model';
+import { Artist, Paging, TrackDetails, UserProfile } from '../../models/spotify.model';
 import { ENV } from '../../../../environments/environment';
 import { LoadTopItemsInput } from './inputs';
 
@@ -30,16 +30,16 @@ export class ApiService {
   public getUserSavedTracks(
     limit: number = 20,
     offset: number = 0
-  ): Observable<any> {
-    return this.get<any>('me/tracks', { limit, offset });
+  ): Observable<Paging<TrackDetails>> {
+    return this.get<Paging<TrackDetails>>('me/tracks', { limit, offset });
   }
 
-  public getUserTopItems(loadTopItemsInput: LoadTopItemsInput): Observable<Artist[] | Track[]> {
+  public getUserTopItems(loadTopItemsInput: LoadTopItemsInput): Observable<Paging<Artist | TrackDetails>> {
 
     const defaultLimit = 20;
     const defaultOffset = 0;
 
-    return this.get<Artist[] | Track[]>(`me/top/${loadTopItemsInput.type}`, {
+    return this.get<Paging<Artist | TrackDetails>>(`me/top/${loadTopItemsInput.type}`, {
       time_range: loadTopItemsInput.timeRange,
       limit: loadTopItemsInput.limit || defaultLimit,
       offset: loadTopItemsInput.offset || defaultOffset,
