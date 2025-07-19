@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Artist, Paging, TrackDetails, UserProfile } from '../../models/spotify.model';
 import { ENV } from '../../../../environments/environment';
-import { LoadTopItemsInput } from './inputs';
+import { LoadItemsInput, LoadTopItemsInput } from './inputs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,10 +28,16 @@ export class ApiService {
   }
 
   public getUserSavedTracks(
-    offset: number = 0,
-    limit: number = 50,
+    loadItmesInput: LoadItemsInput
   ): Observable<Paging<TrackDetails>> {
-    return this.get<Paging<TrackDetails>>('me/tracks', { limit, offset });
+
+    const defaultLimit = 50;
+    const defaultOffset = 0;
+
+    return this.get<Paging<TrackDetails>>('me/tracks', {
+      limit: loadItmesInput.limit || defaultLimit,
+      offset: loadItmesInput.offset || defaultOffset
+    });
   }
 
   public getUserTopTracks(loadTopItemsInput: LoadTopItemsInput): Observable<Paging<TrackDetails>> {

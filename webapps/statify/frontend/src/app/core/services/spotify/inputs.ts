@@ -1,5 +1,8 @@
-export interface LoadTopItemsInput {
+export interface LoadTopItemsInput extends LoadItemsInput {
     timeRange: TopItemsTimeRange;
+}
+
+export interface LoadItemsInput {
     limit?: number;
     offset?: number;
 }

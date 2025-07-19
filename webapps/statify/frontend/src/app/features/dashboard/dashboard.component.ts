@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../core/services/spotify/api.service';
 import { Paging, TrackDetails, UserProfile } from '../../core/models/spotify.model';
 import { UtilsService } from '../../core/services/spotify/utils.service';
-import { TopItemsTimeRange } from '../../core/services/spotify/inputs';
-import { BehaviorSubject } from 'rxjs';
+import { LoadItemsInput, TopItemsTimeRange } from '../../core/services/spotify/inputs';
+import { BehaviorSubject, of } from 'rxjs';
 import { Error, Idle, Loading, Result, Status, Success } from '../../core/models/result.model';
 import { DashboardApi } from './api/dashboard.api';
 import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
@@ -56,7 +56,13 @@ export class DashboardComponent implements OnInit {
     if (offset == 0) {
       this._loadingUserSavedTracks = []
     }
-    this.dashboardApi.fetchUserSavedTracks(this.spotifyApiService, offset).subscribe(result => {
+
+    const loadItmesInput: LoadItemsInput = {
+      offset: offset,
+      limit: 50
+    }
+
+    this.dashboardApi.fetchUserSavedTracks(this.spotifyApiService, loadItmesInput).subscribe(result => {
       if (result.status == Status.SUCCESS) {
         const offset = result.data.offset
         const total = result.data.total
