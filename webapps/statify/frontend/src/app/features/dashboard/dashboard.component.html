@@ -1,10 +1,20 @@
-<p>Logged in</p>
-<p>Dashboard</p>
-<h2>apis</h2>
-<ul>
-    <li> <button (click)="onClickFetchUserProfile()">Fetch user profile</button></li>
-    <li> <button (click)="onClickFetchUserTopTracks()">Fetch user top tracks</button></li>
-</ul>
-<div class="user-profile">
-    <h3>User Profile</h3>
+<div class="dashboard">
+    <h1>Dashboard</h1>
+    <div class="api-list">
+        <h2>APIS</h2>
+        <ul>
+            <li> <button (click)="onClickFetchUserProfile()">Fetch user profile</button></li>
+            <li> <button (click)="onClickFetchUserTopTracks()">Fetch user top tracks</button></li>
+        </ul>
+    </div>
+    @if ((userProfile$ | async); as profileResult) {
+
+        @if (profileResult.status === 'loading') {
+            <app-loading></app-loading>
+        }
+
+        @else if (profileResult.status === 'success') {
+            <app-user-profile-card [profileResult]="profileResult"></app-user-profile-card>
+        }
+    }
 </div>

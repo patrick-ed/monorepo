@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ApiService } from '../../core/services/spotify/api.service';
@@ -6,16 +6,19 @@ import { Artist, Paging, TrackDetails, UserProfile } from '../../core/models/spo
 import { UtilsService } from '../../core/services/spotify/utils.service';
 import { TopItemsTimeRange } from '../../core/services/spotify/inputs';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
-import { Idle, Loading, Result, Success } from '../../core/models/response.model';
+import { Idle, Result } from '../../core/models/result.model';
 import { DashboardApi } from './api/dashboard.api';
+import { AsyncPipe } from '@angular/common';
+import { LoadingComponent } from "../../core/components/loading/loading.component";
+import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [AsyncPipe, LoadingComponent, UserProfileCardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements OnInit {
 
   constructor(
     private router: Router,
@@ -31,7 +34,7 @@ export class DashboardComponent implements AfterViewInit {
   private _userTopTracks$ = new BehaviorSubject<Result<Paging<TrackDetails>>>(new Idle());
   public userTopTracks$ = this._userTopTracks$.asObservable();
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.redirectIfNotLoggedIn();
 
     this.onClickFetchUserProfile();
