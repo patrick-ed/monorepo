@@ -3,7 +3,7 @@ import { Error, Loading, Result, Status, Success } from "../../../core/models/re
 import { Artist, ArtistDetails, MultipleArtistDetails, Paging, TrackDetails } from "../../../core/models/spotify.model";
 import { ApiService } from "../../../core/services/spotify/api.service";
 import { Injectable } from "@angular/core";
-import { GenreLink as GenreLink } from "../../../core/d3/interfaces";
+import { GenreGraphData, GenreLink as GenreLink, GenreNode } from "../../../core/d3/interfaces";
 import { link } from "d3";
 
 @Injectable({
@@ -70,12 +70,32 @@ export class TrackProcessing {
         return genres
     }
 
+    public prepareGenreData(genreGroups: string[][]): GenreGraphData {
+        const genreNodes: GenreNode[] = this.createNodes(genreGroups)
+        const genreLinks: GenreLink[] = this.linkGenres(genreGroups)
+
+        return {
+            nodes: genreNodes,
+            links: genreLinks
+        }
+
+    }
+
     public linkGenres(genreGroups: string[][]): GenreLink[] {
+
         const genreLinks: GenreLink[] = []
         genreGroups.forEach(genreGroup =>
             genreLinks.push(...this.connectNodes([], genreGroup))
         )
         return genreLinks
+    }
+
+    public createNodes(genreGroups: string[][]): GenreNode[] {
+        const genreArr = [...(new Set(genreGroups.flat()))]
+
+        return genreArr.map(genreId => ({
+            id: genreId
+        }));
     }
 
     public connectNodes(genreLinks: GenreLink[] = [], genreGroup: string[]): GenreLink[] {

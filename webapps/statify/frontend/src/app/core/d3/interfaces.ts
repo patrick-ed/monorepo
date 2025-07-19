@@ -13,6 +13,15 @@ export interface GenreLink {
     lineWeight: number;
 }
 
+export interface GenreNode {
+    id: string;
+}
+
+export interface GenreGraphData {
+    nodes: GenreNode[];
+    links: GenreLink[];
+}
+
 export interface ForceGraphData {
     nodes: ForceNodeDatum[];
     links: HierarchyLink<ForceNodeDatum>[];

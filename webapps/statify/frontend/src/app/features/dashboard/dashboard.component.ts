@@ -101,8 +101,9 @@ export class DashboardComponent implements OnInit {
     this._genreGroups$.pipe(
       tap(result => {
         if (result.status == Status.SUCCESS) {
-          const genreLinks = this.trackProcessing.linkGenres(result.data)
-          console.log("Genre Links:", genreLinks)
+          const genreGraphData = this.trackProcessing.prepareGenreData(result.data)
+          console.log("Genre Links:", genreGraphData.links)
+          console.log("Genre Nodes:", genreGraphData.nodes)
         }
       }),
       takeUntil(this.destroy$)
