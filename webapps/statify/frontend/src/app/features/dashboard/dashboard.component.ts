@@ -35,6 +35,7 @@ export class DashboardComponent implements OnInit {
   public userTopTracks$ = this._userTopTracks$.asObservable();
 
   private _loadingUserSavedTracks: TrackDetails[] = []
+  private _totalSavedTracks: number = 0
 
   private _userSavedTracks$ = new BehaviorSubject<Result<TrackDetails[]>>(new Idle());
   public userSavedTracks$ = this._userSavedTracks$.asObservable();
@@ -52,37 +53,32 @@ export class DashboardComponent implements OnInit {
     return this.spotifyUtils.getDistinctArtists(artists);
   }
 
-  public onClickFetchUserSavedTracks(offset: number = 0): void {
-    if (offset == 0) {
-      this._loadingUserSavedTracks = []
-    }
+  public onClickFetchUserSavedTracks(loadedTracks: number = this._loadingUserSavedTracks.length): void {
 
     const loadItmesInput: LoadItemsInput = {
-      offset: offset,
+      offset: loadedTracks,
       limit: 50
     }
 
-    this.dashboardApi.fetchUserSavedTracks(this.spotifyApiService, loadItmesInput).subscribe(result => {
-      if (result.status == Status.SUCCESS) {
-        const offset = result.data.offset
-        const total = result.data.total
-        const tracks = result.data.items
+    if (loadedTracks <= this._totalSavedTracks && loadedTracks <= this.MAX_SAVED_TRACKS - 50) {
+      this._userSavedTracks$.next(new Loading)
+      this.dashboardApi.fetchUserSavedTracks(this.spotifyApiService, loadItmesInput).subscribe(result => {
+        if (result.status == Status.SUCCESS) {
+          const offset = result.data.offset
+          const tracks = result.data.items
+          this._totalSavedTracks = result.data.total
 
-        this.appendToUserSavedTracks(tracks)
-        if (offset >= this.MAX_SAVED_TRACKS - 50 || offset >= total) {
-          this._userSavedTracks$.next(new Success(this._loadingUserSavedTracks))
+          this.appendToUserSavedTracks(tracks)
+          this.onClickFetchUserSavedTracks(offset + 50) // Recursive API call?? What could go wrong?
         }
-        else if (offset <= total) {
-          this._userSavedTracks$.next(new Loading)
-
-          // Recursive API call?? What could possible go wrong?
-          this.onClickFetchUserSavedTracks(offset + 50)
+        else {
+          this._userSavedTracks$.next(new Error("Failed fetching saved tracks"))
         }
-      }
-      else {
-        this._userSavedTracks$.next(new Error("Failed fetching saved tracks"))
-      }
-    })
+      })
+    }
+    else {
+      this._userSavedTracks$.next(new Success(this._loadingUserSavedTracks))
+    }
   }
 
   private appendToUserSavedTracks(savedTracksBatch: TrackDetails[]): void {
