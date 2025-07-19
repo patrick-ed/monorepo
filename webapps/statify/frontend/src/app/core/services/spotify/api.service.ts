@@ -28,8 +28,8 @@ export class ApiService {
   }
 
   public getUserSavedTracks(
-    limit: number = 20,
-    offset: number = 0
+    offset: number = 0,
+    limit: number = 50,
   ): Observable<Paging<TrackDetails>> {
     return this.get<Paging<TrackDetails>>('me/tracks', { limit, offset });
   }

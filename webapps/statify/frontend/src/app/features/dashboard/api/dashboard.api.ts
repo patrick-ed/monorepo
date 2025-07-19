@@ -24,4 +24,12 @@ export class DashboardApi {
             startWith(new Loading())
         );
     }
+
+    public fetchUserSavedTracks(spotifyApiService: ApiService, offset: number = 0): Observable<Result<Paging<TrackDetails>>> {
+        return spotifyApiService.getUserSavedTracks(offset).pipe(
+            map(savedTracks => new Success<Paging<TrackDetails>>(savedTracks)),
+            catchError(error => of(new Error(error))),
+            startWith(new Loading())
+        );
+    }
 }

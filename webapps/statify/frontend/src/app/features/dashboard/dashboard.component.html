@@ -5,16 +5,8 @@
         <ul>
             <li> <button (click)="onClickFetchUserProfile()">Fetch user profile</button></li>
             <li> <button (click)="onClickFetchUserTopTracks()">Fetch user top tracks</button></li>
+            <li> <button (click)="onClickFetchUserSavedTracks()">Fetch user saved tracks</button></li>
         </ul>
     </div>
-    @if ((userProfile$ | async); as profileResult) {
-
-        @if (profileResult.status === 'loading') {
-            <app-loading></app-loading>
-        }
-
-        @else if (profileResult.status === 'success') {
-            <app-user-profile-card [profileResult]="profileResult"></app-user-profile-card>
-        }
-    }
+    <app-user-profile-card [userProfile]="userProfile$"></app-user-profile-card>
 </div>

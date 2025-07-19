@@ -2,19 +2,17 @@ import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ApiService } from '../../core/services/spotify/api.service';
-import { Artist, Paging, TrackDetails, UserProfile } from '../../core/models/spotify.model';
+import { Paging, TrackDetails, UserProfile } from '../../core/models/spotify.model';
 import { UtilsService } from '../../core/services/spotify/utils.service';
 import { TopItemsTimeRange } from '../../core/services/spotify/inputs';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
-import { Idle, Result } from '../../core/models/result.model';
+import { BehaviorSubject } from 'rxjs';
+import { Error, Idle, Loading, Result, Status, Success } from '../../core/models/result.model';
 import { DashboardApi } from './api/dashboard.api';
-import { AsyncPipe } from '@angular/common';
-import { LoadingComponent } from "../../core/components/loading/loading.component";
 import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [AsyncPipe, LoadingComponent, UserProfileCardComponent],
+  imports: [UserProfileCardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -25,6 +23,8 @@ export class DashboardComponent implements OnInit {
     private spotifyUtils: UtilsService,
   ) { }
 
+  private MAX_SAVED_TRACKS = 200
+
   private spotifyApiService = inject(ApiService);
   private dashboardApi = inject(DashboardApi);
 
@@ -33,6 +33,12 @@ export class DashboardComponent implements OnInit {
 
   private _userTopTracks$ = new BehaviorSubject<Result<Paging<TrackDetails>>>(new Idle());
   public userTopTracks$ = this._userTopTracks$.asObservable();
+
+  private _loadingUserSavedTracks: TrackDetails[] = []
+
+  private _userSavedTracks$ = new BehaviorSubject<Result<TrackDetails[]>>(new Idle());
+  public userSavedTracks$ = this._userSavedTracks$.asObservable();
+
 
   ngOnInit(): void {
     this.redirectIfNotLoggedIn();
@@ -44,6 +50,41 @@ export class DashboardComponent implements OnInit {
   public extractArtistsFromSavedTracks(savedTracks: TrackDetails[]) {
     const artists = savedTracks.flatMap(trackDetails => trackDetails.track.artists);
     return this.spotifyUtils.getDistinctArtists(artists);
+  }
+
+  public onClickFetchUserSavedTracks(offset: number = 0): void {
+    if (offset == 0) {
+      this._loadingUserSavedTracks = []
+    }
+    this.dashboardApi.fetchUserSavedTracks(this.spotifyApiService, offset).subscribe(result => {
+      if (result.status == Status.SUCCESS) {
+        const offset = result.data.offset
+        const total = result.data.total
+        const tracks = result.data.items
+
+        this.appendToUserSavedTracks(tracks)
+        if (offset >= this.MAX_SAVED_TRACKS - 50 || offset >= total) {
+          this._userSavedTracks$.next(new Success(this._loadingUserSavedTracks))
+        }
+        else if (offset <= total) {
+          this._userSavedTracks$.next(new Loading)
+
+          // Recursive API call?? What could possible go wrong?
+          this.onClickFetchUserSavedTracks(offset + 50)
+        }
+      }
+      else {
+        this._userSavedTracks$.next(new Error("Failed fetching saved tracks"))
+      }
+    })
+  }
+
+  private appendToUserSavedTracks(savedTracksBatch: TrackDetails[]): void {
+    const currentTracks = this._loadingUserSavedTracks
+    const updatedTracks = [...currentTracks, ...savedTracksBatch];
+    console.log("Updated tracks:", updatedTracks)
+
+    this._loadingUserSavedTracks = updatedTracks
   }
 
   public onClickFetchUserProfile(): void {

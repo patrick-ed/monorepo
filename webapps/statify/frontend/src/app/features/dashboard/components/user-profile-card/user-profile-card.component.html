@@ -1,3 +1,10 @@
+@if ((userProfile | async); as profileResult) {
+
+@if (profileResult.status === 'loading') {
+<app-loading></app-loading>
+}
+
+@else if (profileResult.status === 'success') {
 <img class="profile-avatar" [src]="profileResult.data.images[1].url" alt=" User Avatar" width="100" height="100"
     priority>
 
@@ -6,3 +13,5 @@
     <p>{{ profileResult.data.email }}</p>
     <span class="followers">{{ profileResult.data.followers.total }} Followers</span>
 </div>
+}
+}
