@@ -41,4 +41,39 @@ export class GeneralUtilsService {
       .replace(/\//g, '_')
       .replace(/=+$/, '');
   }
+
+
+  saveItemsToLocalStorage<T>(key: string, items: T[]) {
+    try {
+      const jsonString = JSON.stringify(items);
+      localStorage.setItem(key, jsonString);
+
+      console.log(`Saved ${items.length} items of ${key} from local storage.`);
+    } catch (error) {
+      console.error(`Error saving ${key} to local storage:`, error);
+    }
+  }
+
+  loadItemsFromLocalStorage<T>(key: string): T[] | null {
+
+    const jsonString = localStorage.getItem(key);
+    if (!jsonString) {
+      console.log(`${key} not found in local storage.`);
+      return null;
+    }
+
+    try {
+      const items: T[] = JSON.parse(jsonString);
+      console.log(`Loaded ${items.length} items of ${key} from local storage.`);
+      return items;
+    } catch (error) {
+      console.error(`Error parsing ${key} from local storage:`, error);
+      localStorage.removeItem(key);
+      return null;
+    }
+  }
+
+  removeItemsFromLocalStorage(key: string) {
+    localStorage.removeItem(key);
+  }
 }

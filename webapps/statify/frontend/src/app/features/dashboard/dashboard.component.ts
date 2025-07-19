@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ApiService } from '../../core/services/spotify/api.service';
@@ -9,6 +9,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { Error, Idle, Loading, Result, Status, Success } from '../../core/models/result.model';
 import { DashboardApi } from './api/dashboard.api';
 import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
+import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +28,7 @@ export class DashboardComponent implements OnInit {
 
   private spotifyApiService = inject(ApiService);
   private dashboardApi = inject(DashboardApi);
+  private generalUtils = inject(GeneralUtilsService);
 
   private _userProfile$ = new BehaviorSubject<Result<UserProfile>>(new Idle());
   public userProfile$ = this._userProfile$.asObservable();
@@ -34,7 +36,7 @@ export class DashboardComponent implements OnInit {
   private _userTopTracks$ = new BehaviorSubject<Result<Paging<TrackDetails>>>(new Idle());
   public userTopTracks$ = this._userTopTracks$.asObservable();
 
-  private _loadingUserSavedTracks: TrackDetails[] = []
+  private _loadingUserSavedTracks: TrackDetails[] = this.generalUtils.loadItemsFromLocalStorage("savedTracks") || []
   private _totalSavedTracks: number = 0
 
   private _userSavedTracks$ = new BehaviorSubject<Result<TrackDetails[]>>(new Idle());
@@ -77,6 +79,7 @@ export class DashboardComponent implements OnInit {
       })
     }
     else {
+      this.generalUtils.saveItemsToLocalStorage("savedTracks", this._loadingUserSavedTracks)
       this._userSavedTracks$.next(new Success(this._loadingUserSavedTracks))
     }
   }
