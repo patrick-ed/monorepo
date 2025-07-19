@@ -1,13 +1,7 @@
 export interface LoadTopItemsInput {
-    type: TopItemsType;
     timeRange: TopItemsTimeRange;
     limit?: number;
     offset?: number;
-}
-
-export enum TopItemsType {
-    ARTISTS = 'artists',
-    TRACKS = 'tracks',
 }
 
 export enum TopItemsTimeRange {

@@ -34,12 +34,24 @@ export class ApiService {
     return this.get<Paging<TrackDetails>>('me/tracks', { limit, offset });
   }
 
-  public getUserTopItems(loadTopItemsInput: LoadTopItemsInput): Observable<Paging<Artist | TrackDetails>> {
+  public getUserTopTracks(loadTopItemsInput: LoadTopItemsInput): Observable<Paging<TrackDetails>> {
 
     const defaultLimit = 20;
     const defaultOffset = 0;
 
-    return this.get<Paging<Artist | TrackDetails>>(`me/top/${loadTopItemsInput.type}`, {
+    return this.get<Paging<TrackDetails>>(`me/top/tracks`, {
+      time_range: loadTopItemsInput.timeRange,
+      limit: loadTopItemsInput.limit || defaultLimit,
+      offset: loadTopItemsInput.offset || defaultOffset,
+    });
+  }
+
+  public getUserTopArtists(loadTopItemsInput: LoadTopItemsInput): Observable<Paging<Artist>> {
+
+    const defaultLimit = 20;
+    const defaultOffset = 0;
+
+    return this.get<Paging<Artist>>(`me/top/artists`, {
       time_range: loadTopItemsInput.timeRange,
       limit: loadTopItemsInput.limit || defaultLimit,
       offset: loadTopItemsInput.offset || defaultOffset,
