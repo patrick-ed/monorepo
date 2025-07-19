@@ -2,15 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ApiService } from '../../core/services/spotify/api.service';
-import { Paging, TrackDetails, UserProfile } from '../../core/models/spotify.model';
+import { ArtistDetails, Paging, TrackDetails, UserProfile } from '../../core/models/spotify.model';
 import { UtilsService } from '../../core/services/spotify/utils.service';
 import { LoadItemsInput, TopItemsTimeRange } from '../../core/services/spotify/inputs';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subject, takeUntil, tap } from 'rxjs';
 import { Error, Idle, Loading, Result, Status, Success } from '../../core/models/result.model';
 import { DashboardApi } from './api/dashboard.api';
 import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
 import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
-
+import { TrackProcessing } from './api/track-processing';
 @Component({
   selector: 'app-dashboard',
   imports: [UserProfileCardComponent],
@@ -22,9 +22,14 @@ export class DashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private spotifyUtils: UtilsService,
-  ) { }
+    private trackProcessing: TrackProcessing
+  ) {
+    this.userTopTracksListener()
+    this.artistDetailsListener()
+  }
+  private destroy$ = new Subject<void>();
 
-  private MAX_SAVED_TRACKS = 200
+  private MAX_SAVED_TRACKS = 1000
 
   private spotifyApiService = inject(ApiService);
   private dashboardApi = inject(DashboardApi);
@@ -43,6 +48,10 @@ export class DashboardComponent implements OnInit {
   public userSavedTracks$ = this._userSavedTracks$.asObservable();
 
 
+  private _artistDetails$ = new BehaviorSubject<Result<ArtistDetails[]>>(new Idle());
+  public artistDetails$ = this._artistDetails$.asObservable();
+
+
   ngOnInit(): void {
     this.redirectIfNotLoggedIn();
 
@@ -55,8 +64,34 @@ export class DashboardComponent implements OnInit {
     return this.spotifyUtils.getDistinctArtists(artists);
   }
 
-  public onClickFetchUserSavedTracks(loadedTracks: number = this._loadingUserSavedTracks.length): void {
+  public onClickFetchUserSavedTracks(): void {
+    this.fetchAllUserSavedTracks()
+  }
 
+  private userTopTracksListener() {
+    this._userSavedTracks$.pipe(
+      tap(result => {
+        if (result.status == Status.SUCCESS) {
+          const artistids = this.trackProcessing.fetchAllArtistIds(result.data)
+          this.processArtistDetails(artistids)
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+  private artistDetailsListener() {
+    this._artistDetails$.pipe(
+      tap(result => {
+        if (result.status == Status.SUCCESS) {
+          console.log(result.data)
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+  private fetchAllUserSavedTracks(loadedTracks: number = this._loadingUserSavedTracks.length) {
     const loadItmesInput: LoadItemsInput = {
       offset: loadedTracks,
       limit: 50
@@ -71,7 +106,7 @@ export class DashboardComponent implements OnInit {
           this._totalSavedTracks = result.data.total
 
           this.appendToUserSavedTracks(tracks)
-          this.onClickFetchUserSavedTracks(offset + 50) // Recursive API call?? What could go wrong?
+          this.fetchAllUserSavedTracks(offset + 50) // Recursive API call?? What could go wrong?
         }
         else {
           this._userSavedTracks$.next(new Error("Failed fetching saved tracks"))
@@ -79,9 +114,16 @@ export class DashboardComponent implements OnInit {
       })
     }
     else {
-      this.generalUtils.saveItemsToLocalStorage("savedTracks", this._loadingUserSavedTracks)
-      this._userSavedTracks$.next(new Success(this._loadingUserSavedTracks))
+      const finalSavedTracks = this._loadingUserSavedTracks
+      this.generalUtils.saveItemsToLocalStorage("savedTracks", finalSavedTracks)
+      this._userSavedTracks$.next(new Success(finalSavedTracks))
     }
+  }
+
+  private processArtistDetails(artistIds: Set<string>) {
+    this.trackProcessing.fetchAllArtistDetails(this.spotifyApiService, artistIds).subscribe(result => {
+      this._artistDetails$.next(result);
+    });
   }
 
   private appendToUserSavedTracks(savedTracksBatch: TrackDetails[]): void {

@@ -29,6 +29,10 @@ export interface ArtistDetails extends Artist {
   images: ImageObject[];
 }
 
+export interface MultipleArtistDetails {
+  artists: ArtistDetails[]
+}
+
 export interface Album {
   id: string;
   name: string;

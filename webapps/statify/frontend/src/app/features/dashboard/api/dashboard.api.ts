@@ -1,6 +1,6 @@
 import { catchError, map, Observable, of, startWith, tap } from "rxjs";
 import { Error, Loading, Result, Success } from "../../../core/models/result.model";
-import { Paging, TrackDetails, UserProfile } from "../../../core/models/spotify.model";
+import { Artist, ArtistDetails, Paging, TrackDetails, UserProfile } from "../../../core/models/spotify.model";
 import { ApiService } from "../../../core/services/spotify/api.service";
 import { Injectable } from "@angular/core";
 import { LoadItemsInput, LoadTopItemsInput } from "../../../core/services/spotify/inputs";

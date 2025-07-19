@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Artist, Paging, TrackDetails, UserProfile } from '../../models/spotify.model';
+import { Artist, ArtistDetails, MultipleArtistDetails, Paging, TrackDetails, UserProfile } from '../../models/spotify.model';
 import { ENV } from '../../../../environments/environment';
 import { LoadItemsInput, LoadTopItemsInput } from './inputs';
 
@@ -61,6 +61,12 @@ export class ApiService {
       time_range: loadTopItemsInput.timeRange,
       limit: loadTopItemsInput.limit || defaultLimit,
       offset: loadTopItemsInput.offset || defaultOffset,
+    });
+  }
+
+  public getArtistDetails(artistIds: string): Observable<MultipleArtistDetails> {
+    return this.get<MultipleArtistDetails>('artists', {
+      ids: artistIds,
     });
   }
 
