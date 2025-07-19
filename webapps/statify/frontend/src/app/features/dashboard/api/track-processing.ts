@@ -3,6 +3,8 @@ import { Error, Loading, Result, Status, Success } from "../../../core/models/re
 import { Artist, ArtistDetails, MultipleArtistDetails, Paging, TrackDetails } from "../../../core/models/spotify.model";
 import { ApiService } from "../../../core/services/spotify/api.service";
 import { Injectable } from "@angular/core";
+import { GenreLink as GenreLink } from "../../../core/d3/interfaces";
+import { link } from "d3";
 
 @Injectable({
     providedIn: 'root'
@@ -55,6 +57,49 @@ export class TrackProcessing {
                 return of(new Error("An error occurred while fetching artist details."));
             })
         );
+    }
+
+    public condenseGenres(artistDetails: ArtistDetails[]): string[][] {
+        const genres: string[][] = []
+        artistDetails.forEach(artist => {
+            if (artist.genres.length > 1) {
+                genres.push(artist.genres)
+            }
+
+        })
+        return genres
+    }
+
+    public linkGenres(genreGroups: string[][]): GenreLink[] {
+        const genreLinks: GenreLink[] = []
+        genreGroups.forEach(genreGroup =>
+            genreLinks.push(...this.connectNodes([], genreGroup))
+        )
+        return genreLinks
+    }
+
+    public connectNodes(genreLinks: GenreLink[] = [], genreGroup: string[]): GenreLink[] {
+        var srcNode = genreGroup.pop()!!;
+        var srcPointer = genreGroup.length - 1;
+
+        if (genreGroup.length >= 2) {
+            for (var i = srcPointer; i >= 0; i--) {
+
+                var trgNode = genreGroup[i]
+                const link: GenreLink = {
+                    source: srcNode,
+                    target: trgNode,
+                    lineWeight: 1
+                }
+                genreLinks.push(link)
+            }
+        }
+
+        if (genreGroup.length != 1) {
+            this.connectNodes(genreLinks, genreGroup)
+        }
+        return genreLinks
+
     }
 }
 

@@ -1,4 +1,5 @@
 import { HierarchyLink } from "d3";
+import { ForceNode } from "./types";
 
 export interface ForceNodeDatum {
     name: string;
@@ -6,6 +7,11 @@ export interface ForceNodeDatum {
     value?: number;
 }
 
+export interface GenreLink {
+    source: string;
+    target: string;
+    lineWeight: number;
+}
 
 export interface ForceGraphData {
     nodes: ForceNodeDatum[];

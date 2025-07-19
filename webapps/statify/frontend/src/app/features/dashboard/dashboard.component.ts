@@ -5,12 +5,14 @@ import { ApiService } from '../../core/services/spotify/api.service';
 import { ArtistDetails, Paging, TrackDetails, UserProfile } from '../../core/models/spotify.model';
 import { UtilsService } from '../../core/services/spotify/utils.service';
 import { LoadItemsInput, TopItemsTimeRange } from '../../core/services/spotify/inputs';
-import { BehaviorSubject, of, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
 import { Error, Idle, Loading, Result, Status, Success } from '../../core/models/result.model';
 import { DashboardApi } from './api/dashboard.api';
 import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
 import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
 import { TrackProcessing } from './api/track-processing';
+
+
 @Component({
   selector: 'app-dashboard',
   imports: [UserProfileCardComponent],
@@ -26,6 +28,7 @@ export class DashboardComponent implements OnInit {
   ) {
     this.userTopTracksListener()
     this.artistDetailsListener()
+    this.genreGroupListener()
   }
   private destroy$ = new Subject<void>();
 
@@ -50,6 +53,8 @@ export class DashboardComponent implements OnInit {
 
   private _artistDetails$ = new BehaviorSubject<Result<ArtistDetails[]>>(new Idle());
   public artistDetails$ = this._artistDetails$.asObservable();
+
+  private _genreGroups$ = new BehaviorSubject<Result<string[][]>>(new Idle());
 
 
   ngOnInit(): void {
@@ -84,7 +89,20 @@ export class DashboardComponent implements OnInit {
     this._artistDetails$.pipe(
       tap(result => {
         if (result.status == Status.SUCCESS) {
-          console.log(result.data)
+          const genreGroups = this.trackProcessing.condenseGenres(result.data)
+          this._genreGroups$.next(new Success(genreGroups))
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+  private genreGroupListener() {
+    this._genreGroups$.pipe(
+      tap(result => {
+        if (result.status == Status.SUCCESS) {
+          const genreLinks = this.trackProcessing.linkGenres(result.data)
+          console.log("Genre Links:", genreLinks)
         }
       }),
       takeUntil(this.destroy$)
