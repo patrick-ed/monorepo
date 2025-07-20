@@ -13,39 +13,37 @@ export class Graph3dComponent implements AfterViewInit {
 
     const elem = document.getElementById("3d-graph");
     if (elem) {
+      console.log(this.gData)
       const Graph = new ForceGraph3D(elem)
-        .enableNodeDrag(false)
-        .onNodeClick((node) => this.removeNode(Graph, node))
-        .graphData(this.initData);
-      this.createChart(Graph);
+        .graphData(this.gData);
     } else {
       console.error("Element with id '3d-graph' not found.");
     }
   }
 
-  private initData = {
-    nodes: [{ id: 0 }],
-    links: []
+  private nodes = [
+    { "id": "hello" },
+    { "id": "world" },
+  ]
+
+  private links = [{
+    "source": "hello",
+    "target": "world"
+  }]
+
+  private N = 300;
+  private gData = {
+    nodes: [...Array(this.N).keys()].map(i => ({ id: i })),
+    links: [...Array(this.N).keys()]
+      .filter(id => id)
+      .map(id => ({
+        source: id,
+        target: Math.round(Math.random() * (id - 1))
+      }))
   };
 
-
-  private removeNode(Graph: ForceGraph3DInstance<any, any>, node: any) {
-    let { nodes, links } = Graph.graphData();
-    links = links.filter(l => l.source !== node && l.target !== node);
-    nodes.splice(node.id, 1); // Remove node
-    nodes.forEach((n, idx) => { n.id = idx; }); // Reset node ids to array index
-    Graph.graphData({ nodes, links });
-  }
-
-  private createChart(Graph: any): void {
-
-    setInterval(() => {
-      const { nodes, links } = Graph.graphData();
-      const id = nodes.length;
-      Graph.graphData({
-        nodes: [...nodes, { id }],
-        links: [...links, { source: id, target: Math.round(Math.random() * (id - 1)) }]
-      });
-    }, 1000);
-  }
+  // private gData = {
+  //   nodes: this.nodes,
+  //   links: this.links
+  // };
 }
