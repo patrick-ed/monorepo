@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
-import { GenreGraphData } from '../../core/d3/interfaces';
+import { GenreGraphData, GenreNode } from '../../core/d3/interfaces';
 import ForceGraph3D from '3d-force-graph';
+import SpriteText from 'three-spritetext';
 
 @Component({
   selector: 'app-genre-graph',
@@ -27,6 +28,14 @@ export class GenreGraphComponent implements OnInit {
     console.log(gData)
 
     const Graph = new ForceGraph3D(elem)
-      .graphData(gData);
+      // .nodeAutoColorBy('group')
+      .graphData(gData)
+      .nodeThreeObject((node: GenreNode) => {
+        const sprite = new SpriteText(node.id);
+        sprite.textHeight = 8;
+        sprite.offsetY = -14;
+        return sprite;
+      })
+      .nodeThreeObjectExtend(true)
   }
 }
