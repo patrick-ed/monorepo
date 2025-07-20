@@ -11,6 +11,7 @@ import { DashboardApi } from './api/dashboard.api';
 import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
 import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
 import { TrackProcessing } from './api/track-processing';
+import { GenreGraphData } from '../../core/d3/interfaces';
 
 
 @Component({
@@ -55,6 +56,8 @@ export class DashboardComponent implements OnInit {
   public artistDetails$ = this._artistDetails$.asObservable();
 
   private _genreGroups$ = new BehaviorSubject<Result<string[][]>>(new Idle());
+
+  private _genreGraphData$ = new BehaviorSubject<Result<GenreGraphData>>(new Idle());
 
 
   ngOnInit(): void {
@@ -101,9 +104,14 @@ export class DashboardComponent implements OnInit {
     this._genreGroups$.pipe(
       tap(result => {
         if (result.status == Status.SUCCESS) {
-          const genreGraphData = this.trackProcessing.prepareGenreData(result.data)
-          console.log("Genre Links:", genreGraphData.links)
-          console.log("Genre Nodes:", genreGraphData.nodes)
+          try {
+            const genreGraphData = this.trackProcessing.prepareGenreData(result.data)
+            this._genreGraphData$.next(new Success(genreGraphData))
+            this.generalUtils.saveItemsToLocalStorage("genreGraphData", [genreGraphData])
+          }
+          catch (e) {
+            this._genreGraphData$.next(new Error(e))
+          }
         }
       }),
       takeUntil(this.destroy$)
