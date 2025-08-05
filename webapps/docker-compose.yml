@@ -4,7 +4,7 @@ services:
     container_name: nginx-proxy
     restart: always
     volumes:
-      - ./shared/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./shared/nginx/${NGINX_CONF_FILE:-nginx.conf}:/etc/nginx/nginx.conf:ro
       - nginx_proxy_logs:/var/log/nginx 
     ports:
       - "80:80"

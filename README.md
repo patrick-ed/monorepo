@@ -34,6 +34,11 @@ For each webapp, installation remains practically the same as they all use very 
 
 ### Docker
 You also have the option to use docker to develop:
+- first you must configure your `/etc/hosts` file map certain domains back to `127.0.0.1` A line in the host database would look like:
+  - `127.0.0.1    template.patrickdd.test` (take note of ".test" instead of ".com")
+  - do this for each subdomain
+- then create the shared docker network by simply doing: `NGINX_CONF_FILE=nginx-dev.conf docker-compose up -d` in `webapps`
+  - this `nginx-dev.conf` instead of `nginx.conf` to recognise `.test` TLDs instead of `.com`. 
 - cd into which ever webapp you want to develop: `cd webapps/[webappname]`
 - Run `docker compose up -d`
 - To check logs: `docker logs [container-name]`
