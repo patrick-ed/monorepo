@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.Instant
 
 @WebMvcTest(PingController::class)
 class PingControllerTest {
@@ -45,12 +46,14 @@ class PingControllerTest {
 
     @Test
     fun pingStatsShouldReturnPingStatistics() {
-        val pingStats = PingStats(identifier = "total_pings", id = 0, clicks = 10)
+        val now = Instant.now()
+        val pingStats = PingStats(identifier = "total_pings", clicks = 10, lastPing = now)
         whenever(pingStatsRepository.findAll()).thenReturn(listOf(pingStats))
 
         mockMvc.perform(get("/api/v1/ping/stats"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.identifier").value("total_pings"))
             .andExpect(jsonPath("$.clicks").value(10))
+            .andExpect(jsonPath("$.lastPing").value(now.toString()))
     }
 }
