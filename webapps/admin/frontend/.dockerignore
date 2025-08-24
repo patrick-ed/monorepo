@@ -1,0 +1,7 @@
+# Ignore node_modules, it will be installed inside the container
+node_modules
+
+# Ignore local build artifacts, they will be created inside the container
+dist
+build
+.angular
