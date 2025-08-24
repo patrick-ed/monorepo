@@ -1,0 +1,7 @@
+# Ignore build artifacts created by Gradle/Maven
+build
+.gradle
+
+# Ignore IDE-specific files
+.idea
+*.iml

@@ -1,0 +1,57 @@
+services:
+  admin-frontend:
+    build: ./frontend
+    image: admin-frontend:latest
+    container_name: admin-frontend
+    restart: unless-stopped
+    networks:
+      - shared_network_ref
+    depends_on:
+      - admin-backend
+
+  admin-backend:
+    build: ./backend
+    image: admin-backend:latest
+    container_name: admin-backend
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - APP_URL_FRONTEND=${FRONTEND_URL}
+      - APP_URL_BACKEND=${BACKEND_URL}
+    depends_on:
+      admin-db:
+        condition: service_healthy
+    networks:
+      - internal_network
+      - shared_network_ref
+
+  admin-db:
+    image: postgres:17
+    container_name: admin-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - admin_db_data:/var/lib/postgresql/data
+    networks:
+      - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  internal_network:
+    driver: bridge
+  shared_network_ref:
+    external: true
+    name: shared_network
+
+volumes:
+  admin_db_data:
