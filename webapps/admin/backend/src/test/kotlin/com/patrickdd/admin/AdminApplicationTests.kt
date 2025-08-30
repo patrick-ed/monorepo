@@ -11,7 +11,13 @@ import org.springframework.test.context.TestPropertySource
     "spring.datasource.username=sa",
     "spring.datasource.password=password",
     "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-    "app.metadata.environment=test"
+    "app.metadata.environment=test",
+    "spring.mail.host=localhost",
+    "spring.mail.port=25",
+    "spring.mail.username=test",
+    "spring.mail.password=test",
+    "jwt.secret=testsecret",
+    "jwt.expiration=86400"
 ])
 class AdminApplicationTests {
 

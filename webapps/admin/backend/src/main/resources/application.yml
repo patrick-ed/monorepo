@@ -11,6 +11,18 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    from: ${EMAIL_USERNAME}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
 
 app:
   metadata:
@@ -18,3 +30,7 @@ app:
   url:
     frontend: ${FRONTEND_URL}
     backend: ${BACKEND_URL}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
