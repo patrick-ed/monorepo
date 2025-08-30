@@ -6,11 +6,12 @@ on:
       - main
     paths:
       - "webapps/**"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "webapps/**"
+  # Commented as webapps would be deployed without approval
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "webapps/**"
   workflow_dispatch:
 
 jobs:
