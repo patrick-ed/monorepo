@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthComponent, AuthCredentials } from '../auth/auth.component';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
     selector: 'app-home',
@@ -10,11 +11,20 @@ import { AuthComponent, AuthCredentials } from '../auth/auth.component';
 })
 export class HomeComponent {
 
-    handleLogin(credentials: AuthCredentials) {
+  private authService = inject(AuthService)
+
+  handleLogin(credentials: AuthCredentials) {
     console.log('Login attempt with:', credentials);
     
-    // TODO: Call authentication service here.
-    alert(`Logging in with: ${credentials.username}`);
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Backend response:', response); 
+        alert(response);
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+        alert(`Login failed: ${error.error}`); 
+      }
+    });
   }
-
 }
