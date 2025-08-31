@@ -1,0 +1,16 @@
+<form [class]="'otp-container'" [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+    <p>Enter OTP sent to your email</p>
+    <div [class]="'form-field'">
+        <input 
+        id="otp" 
+        type="tel" 
+        formControlName="otp"
+        placeholder="6-digit otp"
+        maxlength="6">
+    </div>
+
+    <button type="submit" [disabled]="otpForm.invalid">
+        login
+    </button>
+
+</form>

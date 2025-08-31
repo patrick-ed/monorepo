@@ -1,8 +1,18 @@
 <div class="home-page">
     <div class="home-body">
-        <app-auth 
-            submitLabel="Login" 
-            (formSubmit)="handleLogin($event)">
-        </app-auth>
+        @if (!loggedIn && !verifyOTP){
+            <app-auth 
+                submitLabel="Login" 
+                (formSubmit)="handleLogin($event)">
+            </app-auth>
+        }
+        @else if (!loggedIn && verifyOTP) {
+            <app-otp 
+                submitLabel="Login" 
+                (formSubmit)="handleOtp($event)">
+            </app-otp>
+        }
+
+
     </div>
 </div>
