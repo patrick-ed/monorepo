@@ -48,7 +48,8 @@ class AuthController(
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Invalid or expired OTP"))
     }
 
-    @PostMapping("/register")
+    /** Block off any other random people registering (very hacky) */
+//    @PostMapping("/register")
     fun register(@RequestBody registerRequest: RegisterRequest): ResponseEntity<String> {
         val user = User(
             username = registerRequest.username,
