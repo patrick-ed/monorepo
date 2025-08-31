@@ -19,10 +19,9 @@ class SecurityConfig(private val userDetailsService: UserDetailsServiceImpl) {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .securityMatcher("/api/**") // Apply security rules only to /api/
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers("/api/v1/auth/**").permitAll()
+                    .requestMatchers("/api/v1/auth/**","/api/v1/status").permitAll()
                     .anyRequest().authenticated()
             }
             .csrf { it.disable() }
