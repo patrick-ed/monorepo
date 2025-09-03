@@ -3,7 +3,7 @@
     <div [class]="'form-field'">
         <input 
         id="otp" 
-        type="tel" 
+        type="string" 
         formControlName="otp"
         placeholder="6-digit otp"
         maxlength="6">
@@ -12,5 +12,4 @@
     <button type="submit" [disabled]="otpForm.invalid">
         login
     </button>
-
 </form>

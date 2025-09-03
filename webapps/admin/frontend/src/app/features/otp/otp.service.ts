@@ -11,11 +11,11 @@ export class OtpService {
   private apiUrl = '/api/v1/auth';
   constructor() { }
 
-  
-  sendOtp(otp: OtpCredentials): Observable<string> {
-    const loginRequest = {
-      otp: otp
+  verifyOtp(otpCredentials: OtpCredentials): Observable<string> {
+    const otpRequest = {
+      username: otpCredentials.username,
+      otp: otpCredentials.otp
     };
-    return this.http.post(`${this.apiUrl}/verify-otp`, loginRequest, { responseType: 'text' });
+    return this.http.post(`${this.apiUrl}/verify-otp`, otpRequest, { responseType: 'text' });
   }
 }

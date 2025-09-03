@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 export interface OtpCredentials {
+  username?: string | null;
   otp?: string | null;
 }
 
