@@ -1,5 +1,9 @@
 <header>
-  <span *ngIf="loggedin">logged in</span>
-  <span *ngIf="!loggedin">logged out</span>
+  @if (isLoggedIn$ | async) {
+    <span>Welcome, {{ username$ | async }}</span>
+    <button (click)="logout()">Logout</button>
+  } @else {
+    <span>logged out</span>
+  }
 </header>
 <router-outlet />

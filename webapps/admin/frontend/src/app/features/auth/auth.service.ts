@@ -13,11 +13,13 @@ export class AuthService {
   private apiUrl = '/api/v1/auth';
 
   private loggedInStatus = new BehaviorSubject<boolean>(!this.tokenService.isTokenExpired());
+  private username = new BehaviorSubject<string>(this.tokenService.getUsername() ?? '');
 
   /**
    * An observable that components subscribe to for real-time log in status.
    */
   isLoggedIn$: Observable<boolean> = this.loggedInStatus.asObservable();
+  username$: Observable<string> = this.username.asObservable();
 
   /**
    * Calls the login API endpoint.
@@ -42,6 +44,7 @@ export class AuthService {
   finaliseLogin(token: string): void {
     this.tokenService.setToken(token);
     this.loggedInStatus.next(true);
+    this.username.next(this.tokenService.getUsername() ?? '');
   }
 
   /**
@@ -50,6 +53,7 @@ export class AuthService {
   logout(): void {
     this.tokenService.removeToken();
     this.loggedInStatus.next(false);
+    this.username.next('');
   }
 
   isLoggedIn(): boolean {

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CardComponent } from '../../shared/components/card/card.component';
+import { Router } from '@angular/router';
 import { AuthComponent, AuthCredentials } from '../auth/auth.component';
 import { AuthService } from '../auth/auth.service';
 import { OtpComponent, OtpCredentials } from "../otp/otp.component";
@@ -7,7 +7,7 @@ import { OtpService } from '../otp/otp.service';
 
 @Component({
     selector: 'app-home',
-    imports: [AuthComponent, OtpComponent, CardComponent],
+    imports: [AuthComponent, OtpComponent],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
     standalone: true,
@@ -16,7 +16,7 @@ export class HomeComponent {
 
   private authService = inject(AuthService)
   private otpService = inject(OtpService)
-  private readonly TOKEN_KEY = 'auth_token';
+  private router = inject(Router)
 
   loggedIn = false
   verifiedOtp = false
@@ -32,13 +32,11 @@ export class HomeComponent {
         this.loggedIn = true
         this.verifiedOtp = false
         this.username = credentials.username || ''
-        alert(response);  
       },
       error: (error) => {
         console.error('Login failed:', error);
         this.loggedIn = false
         this.verifiedOtp = false
-        alert(`Login failed: ${error.error}`); 
       }
     });
   }
@@ -55,13 +53,12 @@ export class HomeComponent {
         const token = JSON.parse(response).token;
         this.authService.finaliseLogin(token)
         this.username = this.authService.getUsername()
-
-        alert(response);
+        
+        this.router.navigate(['/'])
       },
       error: (ex) => {
         console.error('OTP failed:', ex);
         this.verifiedOtp = false
-        alert(`OTP failed: ${ex.error}`); 
       }
     });
   }

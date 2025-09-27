@@ -6,9 +6,6 @@
                 (formSubmit)="handleOtp($event)">
             </app-otp>
         }
-        @else if (loggedIn && verifiedOtp){
-            <app-card>Welcome</app-card>
-        }
         @else {
             <app-auth 
                 submitLabel="Login" 
