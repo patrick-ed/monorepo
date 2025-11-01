@@ -1,7 +1,7 @@
 :host{
     margin: 1rem;
     padding: 1rem;
-    background-color: #f0f0f0;
+    background-color: var(--secondary-bg-color);
     border-radius: 1rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;

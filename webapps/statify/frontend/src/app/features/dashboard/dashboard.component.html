@@ -1,12 +1,12 @@
 <div class="dashboard">
     <h1>Dashboard</h1>
-    <div class="api-list">
-        <h2>APIS</h2>
-        <ul>
-            <li> <button (click)="onClickFetchUserProfile()">Fetch user profile</button></li>
-            <li> <button (click)="onClickFetchUserTopTracks()">Fetch user top tracks</button></li>
-            <li> <button (click)="onClickFetchUserSavedTracks()">Fetch user saved tracks</button></li>
-        </ul>
+    <div class="api-card">
+        <h2>APIs</h2>
+        <div class="api-list">
+            <button (click)="onClickFetchUserProfile()">Fetch user profile</button>
+            <button (click)="onClickFetchUserTopTracks()">Fetch user top tracks</button>
+            <button (click)="onClickFetchUserSavedTracks()">Fetch user saved tracks</button>
+        </div>
     </div>
     <app-user-profile-card [userProfile]="userProfile$"></app-user-profile-card>
 </div>
