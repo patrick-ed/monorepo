@@ -1,0 +1,7 @@
+<div class="theme-toggler">
+  <button (click)="toggleTheme()" class="theme-toggle-button">
+    <span *ngIf="theme === Theme.Dark">Light Mode</span>
+    <span *ngIf="theme === Theme.Light">Dark Mode</span>
+  </button>
+</div>
+<router-outlet></router-outlet>

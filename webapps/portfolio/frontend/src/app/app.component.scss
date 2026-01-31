@@ -1,0 +1,16 @@
+.theme-toggler {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+
+  .theme-toggle-button {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: 'Roboto Mono';
+  }
+}
