@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.card {
+  border: 0.1em solid var(--text-primary);
+  border-radius: 0;
+  padding: 1em;
+  background-color: var(--on-background);
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}

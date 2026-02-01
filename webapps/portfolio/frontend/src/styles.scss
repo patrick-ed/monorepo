@@ -1,7 +1,7 @@
 :root {
   --primary-colour: #4a90e2;
   --secondary-colour: #50e3c2;
-  
+
   --background-colour: #ffffff;
   --on-background: #f0f0f0;
 
@@ -11,6 +11,10 @@
 
   --border-colour: #e0e0e0;
   --font-m: 1rem;
+  --font-s: 0.75rem;
+
+  --font-families: "Roboto Mono";
+
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
 }
@@ -38,7 +42,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Roboto Mono';
+  font-family: var(--font-families);
   color: var(--text-primary);
 }
 
