@@ -6,3 +6,34 @@ body {
     background-color: #121212;
     color: #ffffff;
 }
+
+:root {
+  --primary-colour: #4a90e2;
+  --secondary-colour: #50e3c2;
+
+  --background-colour: #121212;
+  --on-background: #000;
+
+  --text-primary: #f0f0f0;
+  --text-secondary: #b0b0b0;
+  --text-muted: #707070;
+
+  --border-colour: #444444;
+  --font-m: 1rem;
+  --font-s: 0.75rem;
+
+  --font-families: "Roboto Mono";
+
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover{
+  color: var(--text-secondary);
+}

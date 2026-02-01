@@ -1,14 +1,15 @@
 <div class="home-page">
     <div class="home-body">
+      <app-card class="portfolio-banner">Portfolio <a href="https://portfolio.patrickdd.com/">here</a>!</app-card>
         @if (loggedIn && !verifiedOtp) {
-            <app-otp 
-                submitLabel="Login" 
+            <app-otp
+                submitLabel="Login"
                 (formSubmit)="handleOtp($event)">
             </app-otp>
         }
         @else {
-            <app-auth 
-                submitLabel="Login" 
+            <app-auth
+                submitLabel="Login"
                 (formSubmit)="handleLogin($event)">
             </app-auth>
         }
