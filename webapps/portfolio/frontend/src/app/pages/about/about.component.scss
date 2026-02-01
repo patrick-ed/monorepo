@@ -1,5 +1,5 @@
 
-:host {
+.about-container {
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -12,6 +12,17 @@
 .about-header{
     text-align: start;
     margin-bottom: 2rem;
+}
+
+.socials-list{
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+}
+
+.socials-list > * {
+  flex: 1;
+  text-align: center;
 }
 
 p{

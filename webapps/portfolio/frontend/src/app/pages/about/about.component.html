@@ -3,10 +3,14 @@
         <h2>About me</h2>
     </div>
     <div class="about-content">
-        <p>Based in London, I am currently working as a software engineer apprentice at Google. At Google I was part of
-            Android Health building products to help billions become healthier.</p>
-        <p>Ever since I started tinkering with gadgets like calculators and laptops, I've always had a keen interest
-            with engineering. Then I started to do computer science at High School where I discovered I loved being
-            challenged and building things. I wanted to use my skills to make a real impact. </p>
+        <p>
+          I'm an 19 year old software engineer currently working at Google as a Software engineering apprentice.
+          I'm part of the Android Health team working on Health Connect creating new exciting Android APIs
+          helping people track their health & fitness.
+        </p>
     </div>
+
+  <div class="socials-list">
+    <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank">{{ social.name }}</a>
+  </div>
 </app-card>
