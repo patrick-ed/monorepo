@@ -6,10 +6,17 @@
     align-items: center;
     font-size: var(--font-m);
     padding: 0 15vh;
+
+}
+
+.about-container{
+    border: 0.1em solid var(--text-primary);
+    background-color: var(--on-background);
+    padding: 1em;
 }
 
 .about-header{
-    text-align: center;
+    text-align: start;
     margin-bottom: 2rem;
 }
 

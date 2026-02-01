@@ -5,9 +5,9 @@
   z-index: 1000;
 
   .theme-toggle-button {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background-color: var(--background-colour);
+    color: var(--text-primary);
+    border: 1px solid var(--text-primary);
     padding: 0.5rem 1rem;
     cursor: pointer;
     border-radius: 4px;

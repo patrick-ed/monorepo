@@ -17,9 +17,16 @@ h1 {
     font-size: 5rem;
     font-weight: bolder
 }
-.button-list{
+
+
+.button-container{
     display: flex;
     justify-content: center;
+}
+
+.button-list{
+    display: flex;
+    align-items: start;
     gap: 1rem;
     flex-direction: column;
 }
