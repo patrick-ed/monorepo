@@ -1,28 +1,39 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthComponent, AuthCredentials } from '../auth/auth.component';
 import { AuthService } from '../auth/auth.service';
 import { OtpComponent, OtpCredentials } from "../otp/otp.component";
 import { OtpService } from '../otp/otp.service';
-import {CardComponent} from '../../shared/components/card/card.component';
+import { CardComponent } from '../../shared/components/card/card.component';
+import { ApiService } from '../../core/services/api.service';
+import { ButtonComponent } from '../../shared/components/button/button.component';
+import { SiteMonitoringService, SiteStatus } from "../../core/services/site-monitoring.service";
+import { Observable } from "rxjs";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'app-home',
-  imports: [AuthComponent, OtpComponent, CardComponent],
+    imports: [CommonModule, AuthComponent, OtpComponent, CardComponent],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
     standalone: true,
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
   private authService = inject(AuthService)
   private otpService = inject(OtpService)
   private router = inject(Router)
+  private siteMonitoringService = inject(SiteMonitoringService);
 
   loggedIn = false
   verifiedOtp = false
   username = ''
 
+  siteStatuses$!: Observable<SiteStatus[]>;
+
+  ngOnInit(): void {
+    this.siteStatuses$ = this.siteMonitoringService.getSiteStatuses();
+  }
 
   handleLogin(credentials: AuthCredentials) {
     console.log('Login attempt with:', credentials);

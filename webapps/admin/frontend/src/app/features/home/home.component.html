@@ -14,4 +14,29 @@
             </app-auth>
         }
     </div>
+
+  <div class="service-container">
+    @for (site of siteStatuses$ | async; track site.url) {
+      <app-card class="service-card">
+        <div class="service-status">
+
+          <a [href]="site.url" target="_blank">{{ site.name }}</a>
+          <span [ngClass]="{
+          'status-up': site.status === 'UP',
+          'status-down': site.status === 'DOWN',
+          'status-loading': site.status === 'LOADING'
+          }">
+            {{ site.status }}
+          </span>
+          <span>{{ site.latency }}ms</span>
+
+        </div>
+      </app-card>
+    } @empty {
+      <app-card class="service-card">
+        <p>No sites being monitored.</p>
+      </app-card>
+    }
+  </div>
+
 </div>

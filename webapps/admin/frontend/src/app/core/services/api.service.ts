@@ -10,6 +10,6 @@ export class ApiService {
 
   // This function calls the backend and expects a plain text response
   pingBackend(): Observable<string> {
-    return this.http.get('/api/v1/ping', { responseType: 'text' });
+    return this.http.get('/api/v1/public/ping', { responseType: 'text' });
   }
 }
