@@ -11,7 +11,7 @@ import java.time.Instant
 
 
 @RestController
-@RequestMapping("/api/v1/status")
+@RequestMapping("/api/v1/public/status")
 class StatusController(
     @Value("\${app.metadata.environment:unknown}")
     private val environment: String,
