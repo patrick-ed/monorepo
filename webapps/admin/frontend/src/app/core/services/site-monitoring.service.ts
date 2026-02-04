@@ -24,7 +24,7 @@ export class SiteMonitoringService {
   googleDns: Site = {url: 'https://dns.google/resolve?name=patrickdd.com', name: 'dns.google'} // Control variable
 
   // TODO: Uncomment when CORS is sorted out.
-  admin: Site = {url: 'https://admin.patrickdd.com/api/v1/public/ping', name: 'admin.patrickdd.com'}
+  admin: Site = {url: 'https://patrickdd.com/api/v1/public/ping', name: 'admin.patrickdd.com'}
   portfolio: Site = {url: 'https://portfolio.patrickdd.com/api/v1/ping', name: 'portfolio.patrickdd.com'}
   // template: Site = {url: 'https://template.patrickdd.com/api/v1/ping', name: 'template.patrickdd.com'}
 
