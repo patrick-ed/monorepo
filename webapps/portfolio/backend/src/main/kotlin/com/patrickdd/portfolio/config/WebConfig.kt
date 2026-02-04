@@ -15,6 +15,7 @@ class WebConfig {
                 registry.addMapping("/api/v1/**")
                     .allowedOrigins(
                         "https://*.patrickdd.com",
+                        "https://patrickdd.com",
                         "http://localhost:4200"
                     )
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
