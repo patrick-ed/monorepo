@@ -78,22 +78,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up SSH key
+      - name: Install cloudflared and setup SSH config
         run: |
+          # Install cloudflared
+          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+          sudo dpkg -i cloudflared.deb
+          
+          # Setup ssh dir
           mkdir -p ~/.ssh
           echo "${{ secrets.PI_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+          
+          # Create ssh config w/ cf tunnel proxy
+          # service token id + secret passed here
           echo "Host pi-deploy
             HostName ${{ secrets.PI_HOST }}
             User ${{ secrets.PI_USER }}
-            Port ${{ secrets.PI_SSH_PORT }}
             IdentityFile ~/.ssh/id_ed25519
             StrictHostKeyChecking no
-            UserKnownHostsFile=/dev/null" > ~/.ssh/config
+            ProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h --id ${{ secrets.CF_CLIENT_ID }} --secret ${{ secrets.CF_CLIENT_SECRET }}" > ~/.ssh/config
 
       - name: Make deploy script executable
         run: chmod +x webapps/${{ matrix.webapp }}/deploy.sh
 
       - name: Run deploy script (build, save, upload, load, start)
         run: |
-          webapps/${{ matrix.webapp }}/deploy.sh ${{ secrets.PI_USER }} ${{ secrets.PI_SSH_PORT }} ${{ secrets.PI_HOST }}
+          webapps/${{ matrix.webapp }}/deploy.sh ${{ secrets.PI_USER }} 22 ${{ secrets.PI_HOST }}
