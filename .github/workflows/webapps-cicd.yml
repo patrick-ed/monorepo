@@ -88,13 +88,13 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           
           cat <<EOF > ~/.ssh/config
-          Host pi-deploy
+          Host pi-deploy ssh.patrickdd.com
             HostName ssh.patrickdd.com
             User ${{ secrets.PI_USER }}
             IdentityFile ~/.ssh/id_ed25519
             StrictHostKeyChecking no
             UserKnownHostsFile /dev/null
-            ProxyCommand /usr/local/bin/cloudflared access ssh --hostname \%h --id ${{ secrets.CF_CLIENT_ID }} --secret ${{ secrets.CF_CLIENT_SECRET }}
+            ProxyCommand /usr/bin/env CF_ACCESS_CLIENT_ID=${{ secrets.CF_CLIENT_ID }} CF_ACCESS_CLIENT_SECRET=${{ secrets.CF_CLIENT_SECRET }} cloudflared access ssh --hostname %h
           EOF
 
       - name: Make deploy script executable
