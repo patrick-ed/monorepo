@@ -29,6 +29,9 @@ ssh -p "$PORT" pi-deploy <<EOF
   echo "[server] Navigating to project directory..."
   cd "$REMOTE_DIR"
 
+  echo "[server] Navigating to root webapps dir..."
+  cd ..
+
   echo "[server] Building Docker images..."
   docker compose build
 
