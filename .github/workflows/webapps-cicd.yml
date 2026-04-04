@@ -27,6 +27,7 @@ jobs:
         uses: tj-actions/changed-files@v44
         with:
           files: |
+            webapps/nginx/**
             webapps/admin/**
             webapps/template/**
             webapps/fullstackproject/**
@@ -40,6 +41,10 @@ jobs:
           changed=()
 
           # change detection
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/nginx/)" ]]; then
+            changed+=("nginx")
+          fi
+
           if [[ -n "$(git diff --name-only HEAD^ HEAD -- webapps/fullstackproject/)" ]]; then
             changed+=("fullstackproject")
           fi
