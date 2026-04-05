@@ -4,7 +4,15 @@ services:
     container_name: nginx-proxy
     restart: always
     volumes:
-      - ./nginx/${NGINX_CONF_FILE:-nginx.conf}:/etc/nginx/nginx.conf:ro
+      # Mount main nginx conf wrapper
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro 
+
+      # Mount conf.d dir (site specific configs)
+      - ./nginx/${NGINX_CONF_DIR:-conf.d}:/etc/nginx/conf.d:ro
+
+      # Mount the snippets directory
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      
       - nginx_proxy_logs:/var/log/nginx 
     ports:
       - "80:80"
