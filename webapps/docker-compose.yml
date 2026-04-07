@@ -11,7 +11,7 @@ services:
       - ./nginx/${NGINX_CONF_DIR:-conf.d}:/etc/nginx/conf.d:ro
 
       # Mount private config dir
-      - ./nginx-hidden/${NGINX_CONF_DIR:-conf.d}:/etc/nginx/conf.d/hidden:ro
+      - ./nginx-hidden/${NGINX_CONF_DIR:-conf.d}:/etc/nginx-hidden/conf.d:ro
 
       # Mount the snippets directory
       - ./nginx/snippets:/etc/nginx/snippets:ro
