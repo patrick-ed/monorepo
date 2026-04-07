@@ -5,7 +5,7 @@ USER=$1
 PORT=$2
 HOST=$3
 
-APP_NAME="main"
+APP_NAME="nginx"
 LOCAL_DIR="webapps/$APP_NAME"
 REMOTE_DIR="/home/$USER/monorepo/webapps/$APP_NAME"
 

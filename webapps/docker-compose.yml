@@ -10,6 +10,9 @@ services:
       # Mount conf.d dir (site specific configs)
       - ./nginx/${NGINX_CONF_DIR:-conf.d}:/etc/nginx/conf.d:ro
 
+      # Mount private config dir
+      - ../nginx-hidden/${NGINX_CONF_DIR:-conf.d}:/etc/nginx/conf.d/hidden:ro
+
       # Mount the snippets directory
       - ./nginx/snippets:/etc/nginx/snippets:ro
       
