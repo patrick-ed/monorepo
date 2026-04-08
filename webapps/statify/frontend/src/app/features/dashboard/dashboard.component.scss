@@ -12,17 +12,6 @@
     align-items: center;
 }
 
-.api-card{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin: 1rem;
-    padding: 1rem;
-    background-color: var(--secondary-bg-color);
-    border-radius: 1rem;
-    box-shadow: 0 4px 8px #00000033;
-}
-
 .api-list{
     display: flex;
     flex-direction: column;

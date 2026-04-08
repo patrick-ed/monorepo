@@ -42,11 +42,11 @@ export class CallbackComponent implements OnInit {
 
   private handleSuccess(response: any) {
     console.log('Successfully obtained token!', response);
-    this.router.navigate(['/dashboard'], { queryParams: { success: 'auth_success' } });
+    this.router.navigate(['/dashboard']);
   }
 
   private handleError(error: any) {
     console.error('An error occurred:', error);
-    this.router.navigate(['/'], { queryParams: { error: 'auth_failed' } });
+    this.router.navigate(['/']);
   }
 }
