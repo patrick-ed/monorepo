@@ -152,7 +152,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
         this.updateProgress('graph', Status.SUCCESS, 100);
 
         // brief delay so the user sees 100% before redirecting
-        // setTimeout(() => this.router.navigate(['/dashboard']), 800);
+        setTimeout(() => this.router.navigate(['/dashboard']), 800);
       }
     });
   }
