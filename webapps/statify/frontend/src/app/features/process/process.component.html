@@ -1,1 +1,36 @@
-<p>Loading spotify statistics...</p>
+<div class="process-container editorial-container">
+  <!-- Header Section -->
+  <header class="process-header">
+    <div class="header-content">
+      <h1 class="metric-hero">{{ overallProgress$ | async }}%</h1>
+      <p class="subtitle">Processing spotify stats</p>
+    </div>
+  </header>
+
+  <!-- Progress Grid -->
+  <div class="steps-grid">
+    <div *ngFor="let step of (steps$ | async)" class="step-card card">
+      <div class="step-meta">
+        <span class="step-name">{{ step.name }}</span>
+        <span class="step-percentage" [class.active]="step.status === 'success'">
+          {{ step.status === 'error' ? 'FAILED' : step.percentage + '%' }}
+        </span>
+      </div>
+
+      <!-- Progress Bar Track -->
+      <div class="progress-track">
+        <div class="progress-fill"
+             [style.width.%]="step.percentage"
+             [class.success]="step.status === 'success'"
+             [class.error]="step.status === 'error'"
+             [class.loading]="step.status === 'loading'">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Info -->
+  <footer class="process-footer">
+    <p class="disclaimer">Pls stay on this page</p>
+  </footer>
+</div>

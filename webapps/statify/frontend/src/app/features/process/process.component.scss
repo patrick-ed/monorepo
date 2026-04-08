@@ -1,0 +1,116 @@
+.process-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  text-align: center;
+  user-select: none;
+}
+
+.process-header {
+  margin-bottom: calc(var(--spacing-unit) * 8);
+
+  .metric-hero {
+    margin-bottom: var(--spacing-unit);
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    font-size: 0.65rem;
+  }
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: calc(var(--spacing-unit) * 3);
+  width: 100%;
+  max-width: 900px;
+}
+
+.step-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit);
+  text-align: left;
+  background-color: var(--bg-card);
+
+  &:hover {
+    background-color: var(--bg-surface);
+  }
+}
+
+.step-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .step-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .step-percentage {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+
+    &.active {
+      color: var(--accent-primary);
+    }
+  }
+}
+
+.progress-track {
+  height: 4px;
+  background-color: var(--bg-obsidian);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--text-muted);
+  transition: width 0.5s cubic-bezier(0.1, 0.7, 0.1, 1);
+  border-radius: var(--radius-sm);
+
+  &.loading {
+    background-color: var(--text-secondary);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  }
+
+  &.success {
+    background-color: var(--accent-primary);
+    box-shadow: 0 0 15px var(--accent-glow);
+  }
+
+  &.error {
+    background-color: #ff4d4d;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
+  }
+}
+
+.process-footer {
+  margin-top: calc(var(--spacing-unit) * 10);
+
+  .disclaimer {
+    color: var(--text-muted);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+}
+
+@keyframes pulseGlow {
+  0% { text-shadow: 0 0 20px var(--accent-glow); }
+  50% { text-shadow: 0 0 40px var(--accent-glow); }
+  100% { text-shadow: 0 0 20px var(--accent-glow); }
+}
+
+.metric-hero {
+  animation: pulseGlow 4s infinite ease-in-out;
+}

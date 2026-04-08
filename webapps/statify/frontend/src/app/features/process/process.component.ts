@@ -1,13 +1,21 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Subject, takeUntil, tap } from 'rxjs';
-import { Idle, Loading, Result, Status, Success } from '../../core/models/result.model';
+import { BehaviorSubject, combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
+import { Idle, Result, Status, Success } from '../../core/models/result.model';
 import { ArtistDetails, TrackDetails, UserData, UserProfile } from '../../core/models/spotify.model';
 import { ApiService } from '../../core/services/spotify/api.service';
 import { TrackProcessing } from './api/track-processing';
 import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
 import { LoadItemsInput, TopItemsTimeRange } from '../../core/services/spotify/inputs';
 import { ProcessApi } from './api/process.api';
+import { CommonModule } from '@angular/common';
+
+export interface LoadingStep {
+  id: string;
+  name: string;
+  status: Status;
+  percentage: number;
+}
 
 /**
  * Page that loads just after a successful Spotify authentication / login
@@ -17,50 +25,51 @@ import { ProcessApi } from './api/process.api';
  */
 @Component({
   selector: 'app-process',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './process.component.html',
   styleUrl: './process.component.scss'
 })
 export class ProcessComponent implements OnInit, OnDestroy {
 
-  /**
-   * 1. Fetch user profile
-   * 2. Fetch top artists / tracks
-   * 3. Fetch user saved tracks
-   * 4. Aggregate saved tracks and generate genre graph data
-   * 5. Save all to UserData then add to local storage
-   */
   private router = inject(Router);
   private spotifyApiService = inject(ApiService);
   private processApi = inject(ProcessApi);
   private trackProcessor = inject(TrackProcessing);
   private generalUtils = inject(GeneralUtilsService);
 
-  private MAX_SAVED_TRACKS = 1000
-
+  private MAX_SAVED_TRACKS = 500;
   private destroy$ = new Subject<void>();
 
+  // Data Streams
   private _userProfile$ = new BehaviorSubject<Result<UserProfile>>(new Idle());
-  public userProfile$ = this._userProfile$.asObservable();
-
   private _userSavedTracks$ = new BehaviorSubject<Result<TrackDetails[]>>(new Idle());
-  public userSavedTracks$ = this._userSavedTracks$.asObservable();
-
   private _userTopTracks$ = new BehaviorSubject<Result<TrackDetails[]>>(new Idle());
-  public userTopTracks$ = this._userTopTracks$.asObservable();
-
   private _userTopArtists$ = new BehaviorSubject<Result<ArtistDetails[]>>(new Idle());
-  public userTopArtists$ = this._userTopArtists$.asObservable();
 
-  // Currently loaded user saved tracks
+  private _steps$ = new BehaviorSubject<LoadingStep[]>([
+    { id: 'profile', name: 'User Profile', status: Status.IDLE, percentage: 0 },
+    { id: 'top_tracks', name: 'Top Tracks', status: Status.IDLE, percentage: 0 },
+    { id: 'top_artists', name: 'Top Artists', status: Status.IDLE, percentage: 0 },
+    { id: 'saved_tracks', name: 'Library Sync', status: Status.IDLE, percentage: 0 },
+    { id: 'graph', name: 'Generate Genre Graph', status: Status.IDLE, percentage: 0 }
+  ]);
+
+  // Expose steps and an overall percentage to the UI
+  public steps$ = this._steps$.asObservable();
+  public overallProgress$ = this._steps$.pipe(
+    map(steps => {
+      const total = steps.reduce((acc, step) => acc + step.percentage, 0);
+      return Math.round(total / steps.length);
+    })
+  );
+
   private _loadedUserSavedTracks: TrackDetails[] = this.loadTracksFromCache();
-  private _totalUserSavedTracks: number = 0
+  private _totalUserSavedTracks: number = 0;
 
   ngOnInit(): void {
-    this.redirectIfNotLoggedIn()
-
-    this.setupDataListeners()
-    this.triggerDataHarvest()
+    this.redirectIfNotLoggedIn();
+    this.setupDataListeners();
+    this.triggerDataHarvest();
   }
 
   ngOnDestroy(): void {
@@ -73,10 +82,18 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   private triggerDataHarvest() {
-    this.fetchUserProfile()
-    this.fetchUserTopTracks()
-    this.fetchUserTopArtists()
-    this.fetchAllUserSavedTracks(this._loadedUserSavedTracks.length)
+    this.fetchUserProfile();
+    this.fetchUserTopTracks();
+    this.fetchUserTopArtists();
+    this.fetchAllUserSavedTracks(this._loadedUserSavedTracks.length);
+  }
+
+  private updateProgress(stepId: string, status: Status, percentage: number) {
+    const currentSteps = this._steps$.value;
+    const updatedSteps = currentSteps.map(step =>
+      step.id === stepId ? { ...step, status, percentage } : step
+    );
+    this._steps$.next(updatedSteps);
   }
 
   private aggregateUserDataListener() {
@@ -87,7 +104,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
       this._userSavedTracks$
     ]).pipe(
       tap(([profile, topTracks, topArtists, savedTracks]) => {
-        // If all 4 streams have reached SUCCESS, we process the final object
         if (
           profile.status === Status.SUCCESS &&
           topTracks.status === Status.SUCCESS &&
@@ -112,9 +128,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
     topArtists: ArtistDetails[],
     savedTracks: TrackDetails[]
   ) {
-    console.log("All data fetched! Generating graph and aggregating...");
+    this.updateProgress('graph', Status.LOADING, 50);
 
-    // 1. Get all artist IDs for the graph from saved tracks
     const artistIds = this.trackProcessor.fetchArtistIdsByTrackDetails(savedTracks);
 
     this.trackProcessor.fetchArtistDetailsById(this.spotifyApiService, artistIds).subscribe(result => {
@@ -131,24 +146,27 @@ export class ProcessComponent implements OnInit, OnDestroy {
         };
 
         this.generalUtils.saveItemsToLocalStorage('userData', [userData]);
-
         this.generalUtils.saveItemsToLocalStorage('savedTracks', savedTracks);
         this.generalUtils.saveItemsToLocalStorage('genreGraphData', [graphData]);
 
-        console.log("Aggregation complete and saved to cache.");
+        this.updateProgress('graph', Status.SUCCESS, 100);
 
-        this.router.navigate(['/dashboard']);
+        // brief delay so the user sees 100% before redirecting
+        // setTimeout(() => this.router.navigate(['/dashboard']), 800);
       }
     });
   }
 
   private fetchUserProfile() {
+    this.updateProgress('profile', Status.LOADING, 50);
     this.processApi.fetchUserProfile(this.spotifyApiService).subscribe(result => {
       this._userProfile$.next(result);
+      if (result.status === Status.SUCCESS) this.updateProgress('profile', Status.SUCCESS, 100);
     });
   }
 
   private fetchUserTopTracks() {
+    this.updateProgress('top_tracks', Status.LOADING, 50);
     const loadTopItemsInput = {
       timeRange: TopItemsTimeRange.LONG_TERM,
       limit: 50,
@@ -158,6 +176,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.processApi.fetchUserTopTracks(this.spotifyApiService, loadTopItemsInput).subscribe(result => {
       if (result.status === Status.SUCCESS) {
         this._userTopTracks$.next(new Success(result.data.items));
+        this.updateProgress('top_tracks', Status.SUCCESS, 100);
       } else {
         this._userTopTracks$.next(result as any);
       }
@@ -165,6 +184,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   private fetchUserTopArtists() {
+    this.updateProgress('top_artists', Status.LOADING, 30);
     const loadTopItemsInput = {
       timeRange: TopItemsTimeRange.LONG_TERM,
       limit: 50,
@@ -173,10 +193,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
     this.processApi.fetchUserTopArtists(this.spotifyApiService, loadTopItemsInput).subscribe(result => {
       if (result.status === Status.SUCCESS) {
-
         const artistIds = new Set(result.data.items.map(a => a.id));
         this.trackProcessor.fetchArtistDetailsById(this.spotifyApiService, artistIds).subscribe(detailsResult => {
           this._userTopArtists$.next(detailsResult);
+          if (detailsResult.status === Status.SUCCESS) this.updateProgress('top_artists', Status.SUCCESS, 100);
         });
       } else {
         this._userTopArtists$.next(result as any);
@@ -184,49 +204,45 @@ export class ProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  private redirectIfNotLoggedIn() {
-    const accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      this.router.navigate(['/']);
-    }
-  }
-
-  private loadTracksFromCache(): TrackDetails[] {
-    const result = this.generalUtils.loadItemsFromLocalStorage<TrackDetails>("savedTracks");
-    if (result.status === Status.SUCCESS) {
-      return result.data;
-    }
-    return [];
-  }
-
   private fetchAllUserSavedTracks(fetchedTracks: number) {
-    const loadItemsInput: LoadItemsInput = {
-      offset: fetchedTracks,
-      limit: 50
-    }
+    const loadItemsInput: LoadItemsInput = { offset: fetchedTracks, limit: 50 };
 
     if (this._totalUserSavedTracks > 0 && (fetchedTracks >= this._totalUserSavedTracks || fetchedTracks >= this.MAX_SAVED_TRACKS)) {
       this._userSavedTracks$.next(new Success(this._loadedUserSavedTracks));
+      this.updateProgress('saved_tracks', Status.SUCCESS, 100);
       return;
     }
-
-    this._userSavedTracks$.next(new Loading());
 
     this.processApi.fetchUserSavedTracks(this.spotifyApiService, loadItemsInput).subscribe(result => {
       if (result.status == Status.SUCCESS) {
         this._totalUserSavedTracks = result.data.total;
         this._loadedUserSavedTracks = [...this._loadedUserSavedTracks, ...result.data.items];
 
-        const nextOffset = result.data.offset + result.data.limit;
+        // Calculate dynamic percentage based on total tracks to be fetched
+        const limit = Math.min(this._totalUserSavedTracks, this.MAX_SAVED_TRACKS);
+        const currentPercentage = Math.min(Math.round((this._loadedUserSavedTracks.length / limit) * 100), 99);
+        this.updateProgress('saved_tracks', Status.LOADING, currentPercentage);
 
+        const nextOffset = result.data.offset + result.data.limit;
         if (nextOffset < this._totalUserSavedTracks && nextOffset < this.MAX_SAVED_TRACKS) {
           this.fetchAllUserSavedTracks(nextOffset);
         } else {
           this._userSavedTracks$.next(new Success(this._loadedUserSavedTracks));
+          this.updateProgress('saved_tracks', Status.SUCCESS, 100);
         }
       } else if (result.status == Status.ERROR) {
         this._userSavedTracks$.next(result as any);
+        this.updateProgress('saved_tracks', Status.ERROR, 0);
       }
     });
+  }
+
+  private redirectIfNotLoggedIn() {
+    if (!localStorage.getItem('access_token')) this.router.navigate(['/']);
+  }
+
+  private loadTracksFromCache(): TrackDetails[] {
+    const result = this.generalUtils.loadItemsFromLocalStorage<TrackDetails>("savedTracks");
+    return result.status === Status.SUCCESS ? result.data : [];
   }
 }
