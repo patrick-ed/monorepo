@@ -188,4 +188,13 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/']);
     }
   }
+
+  public onClickViewGenreGraph(): void {
+    if (this._genreGraphData$.value.status == Status.SUCCESS) {
+      this.router.navigate(['/genreGraph']);
+    }
+    else {
+      console.log('Fetch user saved tracks first');
+    }
+  }
 }

@@ -78,7 +78,6 @@ export class TrackProcessing {
             nodes: genreNodes,
             links: genreLinks
         }
-
     }
 
     public linkGenres(genreGroups: string[][]): GenreLink[] {
