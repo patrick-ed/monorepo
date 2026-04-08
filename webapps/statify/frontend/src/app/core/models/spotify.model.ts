@@ -1,4 +1,5 @@
 import { ImageObject } from "./ImageObject.model";
+import {GenreGraphData} from '../d3/interfaces';
 
 export interface UserProfile {
   id: string;
@@ -8,6 +9,14 @@ export interface UserProfile {
   followers: { total: number };
   country: string;
   product: string;
+}
+
+export interface UserData {
+  userProfile: UserProfile;
+  savedTracks: TrackDetails[];
+  topTracks: TrackDetails[];
+  topArtists: Artist[];
+  genreGraphData: GenreGraphData;
 }
 
 /**

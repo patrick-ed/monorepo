@@ -42,7 +42,7 @@ export class CallbackComponent implements OnInit {
 
   private handleSuccess(response: any) {
     console.log('Successfully obtained token!', response);
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/process']);
   }
 
   private handleError(error: any) {

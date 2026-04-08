@@ -1,6 +1,6 @@
 import { catchError, forkJoin, map, Observable, of, startWith, tap } from "rxjs";
 import { Error, Loading, Result, Status, Success } from "../../../core/models/result.model";
-import { Artist, ArtistDetails, MultipleArtistDetails, Paging, TrackDetails } from "../../../core/models/spotify.model";
+import { ArtistDetails, MultipleArtistDetails, Paging, TrackDetails } from "../../../core/models/spotify.model";
 import { ApiService } from "../../../core/services/spotify/api.service";
 import { Injectable } from "@angular/core";
 import { GenreGraphData, GenreLink as GenreLink, GenreNode } from "../../../core/d3/interfaces";
@@ -12,7 +12,7 @@ export class TrackProcessing {
 
     private readonly ARTIST_CHUNK_LIMIT = 50;
 
-    public fetchAllArtistIds(tracks: TrackDetails[]): Set<string> {
+    public fetchArtistIdsByTrackDetails(tracks: TrackDetails[]): Set<string> {
         const artistIds = new Set<string>
         tracks.forEach(track =>
             track.track.artists.forEach(artist =>
@@ -22,14 +22,13 @@ export class TrackProcessing {
         return artistIds
     }
 
-    public fetchAllArtistDetails(
+    public fetchArtistDetailsById(
         spotifyApiService: ApiService,
         artistIds: Set<string>
     ): Observable<Result<ArtistDetails[]>> {
 
-        if (artistIds.size === 0) {
-            return of(new Success([]));
-        }
+        if (artistIds.size === 0) { return of(new Success([]));}
+
         const idsArray = [...artistIds];
         const chunks: string[][] = [];
         for (let i = 0; i < idsArray.length; i += this.ARTIST_CHUNK_LIMIT) {

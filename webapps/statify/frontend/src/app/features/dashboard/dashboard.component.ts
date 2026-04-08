@@ -143,8 +143,8 @@ export class DashboardComponent implements OnInit {
           this.appendToUserSavedTracks(tracks)
           this.fetchAllUserSavedTracks(offset + 50) // Recursive API call?? What could go wrong?
         }
-        else {
-          this._userSavedTracks$.next(new Error("Failed fetching saved tracks"))
+        else if (result.status == Status.ERROR) {
+          this._userSavedTracks$.next(new Error(`Failed fetching saved tracks} ${result.error}`))
         }
       })
     }
