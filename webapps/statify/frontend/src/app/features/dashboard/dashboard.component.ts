@@ -45,7 +45,15 @@ export class DashboardComponent implements OnInit {
   private _userTopTracks$ = new BehaviorSubject<Result<Paging<TrackDetails>>>(new Idle());
   public userTopTracks$ = this._userTopTracks$.asObservable();
 
-  private _loadingUserSavedTracks: TrackDetails[] = this.generalUtils.loadItemsFromLocalStorage("savedTracks") || []
+  private _loadingUserSavedTracks: TrackDetails[] = this.loadTracksFromCache();
+
+  private loadTracksFromCache(): TrackDetails[] {
+    const result = this.generalUtils.loadItemsFromLocalStorage<TrackDetails>("savedTracks");
+    if (result.status === Status.SUCCESS) {
+      return result.data;
+    }
+    return [];
+  }
   private _totalSavedTracks: number = 0
 
   private _userSavedTracks$ = new BehaviorSubject<Result<TrackDetails[]>>(new Idle());

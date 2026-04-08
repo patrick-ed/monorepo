@@ -1,4 +1,5 @@
 import { Injectable, input } from '@angular/core';
+import {Error, Result, Success} from '../../models/result.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ export class GeneralUtilsService {
 
   /**
    * Generates a random string of the specified length.
-   * 
+   *
    * @param length The length of the random string to generate.
    * @returns A random string.
    */
@@ -54,22 +55,22 @@ export class GeneralUtilsService {
     }
   }
 
-  loadItemsFromLocalStorage<T>(key: string): T[] | null {
+  loadItemsFromLocalStorage<T>(key: string): Result<T[]> {
 
     const jsonString = localStorage.getItem(key);
     if (!jsonString) {
       console.log(`${key} not found in local storage.`);
-      return null;
+      return new Error(`Could not load ${key} from local storage.`);
     }
 
     try {
       const items: T[] = JSON.parse(jsonString);
       console.log(`Loaded ${items.length} items of ${key} from local storage.`);
-      return items;
+      return new Success<T[]>(items);
     } catch (error) {
       console.error(`Error parsing ${key} from local storage:`, error);
       localStorage.removeItem(key);
-      return null;
+      return new Error(`Error parsing ${key} from local storage:\n${error}`);
     }
   }
 

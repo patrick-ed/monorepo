@@ -4,6 +4,7 @@ import type { NodeObject } from 'three-forcegraph';
 import SpriteText from 'three-spritetext';
 import { GenreGraphData, GenreNode } from '../../core/d3/interfaces';
 import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
+import { Status } from '../../core/models/result.model';
 
 @Component({
   selector: 'app-genre-graph',
@@ -14,14 +15,21 @@ import { GeneralUtilsService } from '../../core/services/utils/general-utils.ser
 export class GenreGraphComponent implements OnInit {
 
   private generalUtils = inject(GeneralUtilsService)
-  private genreGraphData = this.generalUtils.loadItemsFromLocalStorage('genreGraphData') || null
+  private genreGraphData = this.getInitialGenreGraphData();
+
+  private getInitialGenreGraphData(): GenreGraphData | null {
+    const result = this.generalUtils.loadItemsFromLocalStorage<GenreGraphData>('genreGraphData');
+    if (result.status === Status.SUCCESS) {
+      return result.data[0];
+    }
+    return null;
+  }
 
   ngOnInit(): void {
     const elem = document.getElementById("genre-graph");
 
     if (this.genreGraphData != null && elem != null) {
-      const gData = this.genreGraphData[0] as GenreGraphData
-      this.generateGraph(elem, gData)
+      this.generateGraph(elem, this.genreGraphData)
     }
   }
 
@@ -42,6 +50,6 @@ export class GenreGraphComponent implements OnInit {
   }
 
   private nodeClick(node: NodeObject){
-    console.log(node) 
+    console.log(node)
   }
 }
