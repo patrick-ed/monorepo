@@ -2,11 +2,8 @@
     <h1>Dashboard</h1>
     <div>
         <div class="api-list">
-            <button (click)="onClickFetchUserProfile()">Fetch user profile</button>
-            <button (click)="onClickFetchUserTopTracks()">Fetch user top tracks</button>
-            <button (click)="onClickFetchUserSavedTracks()">Fetch user saved tracks</button>
           <button (click)="onClickViewGenreGraph()">View genre network</button>
         </div>
     </div>
-    <app-user-profile-card [userProfile]="userProfile$" ></app-user-profile-card>
+    <app-user-profile-card [userProfile]="userProfile" ></app-user-profile-card>
 </div>

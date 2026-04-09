@@ -37,7 +37,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   private trackProcessor = inject(TrackProcessing);
   private generalUtils = inject(GeneralUtilsService);
 
-  private MAX_SAVED_TRACKS = 500;
+  private MAX_SAVED_TRACKS = 700;
   private destroy$ = new Subject<void>();
 
   // Data Streams
