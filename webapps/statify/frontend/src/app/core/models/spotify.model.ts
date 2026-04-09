@@ -13,7 +13,6 @@ export interface UserProfile {
 
 export interface UserData {
   userProfile: UserProfile;
-  savedTracks: TrackDetails[];
   topTracks: TrackDetails[];
   topArtists: Artist[];
   genreGraphData: GenreGraphData;
