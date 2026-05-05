@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { UserData, UserProfile } from '../../core/models/spotify.model';
+import {TrackDetails, UserData, UserProfile} from '../../core/models/spotify.model';
 import { Idle, Result, Status, Success } from '../../core/models/result.model';
 import { UserProfileCardComponent } from './components/user-profile-card/user-profile-card.component';
 import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
@@ -32,6 +32,8 @@ export class DashboardComponent implements OnInit {
 
   private getUserSpotifyData() {
     const result = this.generalUtils.loadItemsFromLocalStorage<UserData>('userData');
+    const savedTracks = this.generalUtils.loadItemsFromLocalStorage<TrackDetails>('savedTracks');
+    console.log(savedTracks);
 
     if (result.status === Status.SUCCESS && result.data.length > 0) {
       const data = result.data[0];

@@ -1,10 +1,11 @@
 import ForceGraph3D from '3d-force-graph';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import type { NodeObject } from 'three-forcegraph';
 import SpriteText from 'three-spritetext';
 import { GenreGraphData, GenreNode } from '../../core/d3/interfaces';
-import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
 import { Status } from '../../core/models/result.model';
+import { GeneralUtilsService } from '../../core/services/utils/general-utils.service';
 
 @Component({
   selector: 'app-genre-graph',
@@ -14,6 +15,7 @@ import { Status } from '../../core/models/result.model';
 })
 export class GenreGraphComponent implements OnInit {
 
+  private router = inject(Router)
   private generalUtils = inject(GeneralUtilsService)
   private genreGraphData = this.getInitialGenreGraphData();
 
@@ -22,6 +24,7 @@ export class GenreGraphComponent implements OnInit {
     if (result.status === Status.SUCCESS) {
       return result.data[0];
     }
+    this.router.navigate(['/login']);
     return null;
   }
 

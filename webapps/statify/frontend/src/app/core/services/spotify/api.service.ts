@@ -1,7 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Artist, ArtistDetails, MultipleArtistDetails, Paging, TrackDetails, UserProfile } from '../../models/spotify.model';
+import {
+  Artist,
+  ArtistDetails,
+  MultipleArtistDetails,
+  Paging,
+  TrackAnalysis,
+  TrackDetails,
+  UserProfile
+} from '../../models/spotify.model';
 import { ENV } from '../../../../environments/environment';
 import { LoadItemsInput, LoadTopItemsInput } from './inputs';
 
@@ -68,6 +76,10 @@ export class ApiService {
     return this.get<MultipleArtistDetails>('artists', {
       ids: artistIds,
     });
+  }
+
+  public getTrackAnalysis(trackId: string): Observable<TrackAnalysis> {
+    return this.get<TrackAnalysis>(`audio-analysis/${trackId}`);
   }
 
   /**

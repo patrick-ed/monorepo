@@ -6,9 +6,11 @@ import { Graph3dComponent } from './features/graph3d/graph3d.component';
 import { CallbackComponent } from './features/spotify/callback/callback.component';
 import {LoginComponent} from './features/login/login.component';
 import {ProcessComponent} from './features/process/process.component';
+import {DevComponent} from './features/dev/dev.component';
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
+    { path: 'dev', component: DevComponent },
     { path: 'login', component: LoginComponent },
     { path: 'process', component: ProcessComponent },
     { path: 'graph', component: GraphComponent },
