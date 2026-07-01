@@ -1,8 +1,10 @@
-<app-card class="about-container">
+<app-card>
+  <div class="about-container">
     <div class="hero">
         <h1>Patrick Dumdum</h1>
         <p>{{ age }} year old software engineer &#64;<!--'@'--> Google</p>
     </div>
+
     <div class="about-content">
       <h1>About</h1>
         <p>
@@ -12,18 +14,20 @@
         </p>
     </div>
 
-  <div class="stack-container">
-    <h1>Stack</h1>
-    <p>
-      <b>Languages</b><br> Java, Kotlin, C++, C#, Python, JavaScript, TypeScript, PHP, Bash, SQL, HTML/CSS<br><br>
-      <b>Frameworks</b><br> Android, iOS, Angular, Springboot, React, Vite, Bootstrap, Nodejs, ThymeLeaf, Flask, KTor, Mockito,
-      JUnit4, Postgres, Three.js, D3.js, Bucket4J<br><br>
-      <b>Devops</b><br> Docker/Docker Compose, Git/Github/Github Actions, Cloudflare, Bash, CI/CD, nginx<br><br>
-      <b>Tools</b><br> Visual Studio Code, IntelliJ, Android Studio, GeminiCLI, Figma, KiCad, Antigravity
-    <p>
-  </div>
-  <br>
-  <div class="socials-list">
-    <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank">{{ social.name }}</a>
+    <div class="stack-container">
+      <h1>Stack</h1>
+      <p>
+        <b>Languages</b><br> Java, Kotlin, C++, C#, Python, JavaScript, TypeScript, PHP, Bash, SQL, HTML/CSS<br><br>
+        <b>Frameworks</b><br> Android, iOS, Angular, Springboot, React, Vite, Bootstrap, Nodejs, ThymeLeaf, Flask, KTor, Mockito,
+        JUnit4, Postgres, Three.js, D3.js, Bucket4J<br><br>
+        <b>Devops</b><br> Docker/Docker Compose, Git/Github/Github Actions, Cloudflare, Bash, CI/CD, nginx<br><br>
+        <b>Tools</b><br> Visual Studio Code, IntelliJ, Android Studio, GeminiCLI, Figma, KiCad, Antigravity
+      <p>
+    </div>
+
+    <div class="socials-list">
+      <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank">{{ social.name }}</a>
+    </div>
+
   </div>
 </app-card>

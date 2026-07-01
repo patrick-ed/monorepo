@@ -1,11 +1,14 @@
-
-.about-container {
+app-card{
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: var(--font-m);
   padding: 0 15vh;
+}
+
+.about-container {
+  max-width: 80vh;
 }
 
 .about-header{
