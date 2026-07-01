@@ -1,17 +1,28 @@
 <app-card class="about-container">
-    <div class="about-header">
-        <h2>About me</h2>
+    <div class="hero">
+        <h1>Patrick Dumdum</h1>
+        <p>{{ age }} year old software engineer &#64;<!--'@'--> Google</p>
     </div>
     <div class="about-content">
+      <h1>About</h1>
         <p>
-          I'm {{ age }} years old and working as a Software Engineering Apprentice &#64;<!--'@'--> Google.
-          I'm part of the Android Health team working on Health Connect creating new exciting Android APIs
-          helping people track their health & fitness.
+          First joined google at the age of 18 as a swe apprentice as part of the Android Health team creating Android Framework APIs for Health Connect. <br><br>
+          Then later converted to full-time where I work on the Health Ecosystems Integration Team where currently working on Google Health for iOS.
           <br><br>
-          <small>Note: Age dependent on device's system clock.</small>
         </p>
     </div>
 
+  <div class="stack-container">
+    <h1>Stack</h1>
+    <p>
+      <b>Languages</b><br> Java, Kotlin, C++, C#, Python, JavaScript, TypeScript, PHP, Bash, SQL, HTML/CSS<br><br>
+      <b>Frameworks</b><br> Android, iOS, Angular, Springboot, React, Vite, Bootstrap, Nodejs, ThymeLeaf, Flask, KTor, Mockito,
+      JUnit4, Postgres, Three.js, D3.js, Bucket4J<br><br>
+      <b>Devops</b><br> Docker/Docker Compose, Git/Github/Github Actions, Cloudflare, Bash, CI/CD, nginx<br><br>
+      <b>Tools</b><br> Visual Studio Code, IntelliJ, Android Studio, GeminiCLI, Figma, KiCad, Antigravity
+    <p>
+  </div>
+  <br>
   <div class="socials-list">
     <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank">{{ social.name }}</a>
   </div>

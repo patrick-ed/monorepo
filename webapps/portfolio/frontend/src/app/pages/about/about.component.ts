@@ -17,7 +17,7 @@ interface SocialLink {
   styleUrl: './about.component.scss'
 })
 export class AboutComponent {
-  private readonly birthDate = new Date('2006-04-25'); // Replace with your actual birth date if different
+  private readonly birthDate = new Date('2006-04-25');
 
   get age(): number {
     const today = new Date();
@@ -34,6 +34,8 @@ export class AboutComponent {
   leetcode: SocialLink = {name: 'Leetcode', link: 'https://leetcode.com/u/patrick-ed/'};
   email: SocialLink = {name: 'Email', link: 'mailto:patrickedumdum@gmail.com'};
 
-  socialLinks: SocialLink[] = [this.linkedin, this.github, this.leetcode, this.email];
+  resume: SocialLink = {name: 'Resume', link: 'mailto:patrickedumdum@gmail.com?subject=pls can i have resume&body=this is a request for ur resume'};
+
+  socialLinks: SocialLink[] = [this.linkedin, this.github, this.leetcode, this.email, this.resume];
 
 }

@@ -1,17 +1,22 @@
 
 .about-container {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: var(--font-m);
-    padding: 0 15vh;
-
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-m);
+  padding: 0 15vh;
 }
 
 .about-header{
     text-align: start;
     margin-bottom: 2rem;
+}
+
+
+h1{
+  font-size: var(--font-l);
+  margin: 0;
 }
 
 .socials-list{
@@ -22,9 +27,26 @@
 
 .socials-list > * {
   flex: 1;
+  font-size: var(--font-s);
   text-align: center;
 }
 
-p{
-    max-width: 600px;
+.hero{
+  margin-bottom: var(--padding-l);
+  h1{
+    margin-bottom: 0;
+    color: var(--color-black);
+    font-size: var(--font-xl);
+  }
+  p{
+    margin-top: var(--padding-s);
+    font-size: var(--font-m);
+    color: var(--text-secondary);
+  }
+}
+
+.stack-container{
+  p{
+    font-size: var(--font-s);
+  }
 }

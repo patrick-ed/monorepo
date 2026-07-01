@@ -4,7 +4,8 @@ import { LandingComponent } from './pages/landing/landing.component';
 import { LegacyComponent } from './pages/legacy/legacy.component';
 
 export const routes: Routes = [
-    { path: '', component: LandingComponent },
+    { path: '', component: AboutComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'landing', component: LandingComponent },
     { path: 'legacy', component: LegacyComponent },
-    { path: 'about', component: AboutComponent }
 ];
